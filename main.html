@@ -15,8 +15,8 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #ffccee;
-            color: #333;
+            background-color: #f5f5f5;
+            color: #222;
         }
         .container {
             max-width: 900px;
@@ -24,11 +24,11 @@
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(255,0,127,0.3);
-            border: 3px solid #FF007F;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            border: 1px solid #ddd;
         }
         h1 {
-            color: #E6006F;
+            color: #333;
             text-align: center;
             margin-bottom: 20px;
         }
@@ -37,7 +37,7 @@
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
-            border: 2px solid #FF007F;
+            border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
             min-height: 150px;
@@ -48,9 +48,9 @@
         .input-section {
             margin-bottom: 20px;
             padding: 15px;
-            border: 2px solid #FF007F;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            background-color: #ffe6f5;
+            background-color: #f9f9f9;
         }
 
         .input-section label {font-weight: bold; display: block; margin-bottom: 10px;}
@@ -61,37 +61,37 @@
 
         .radio-group input[type="radio"] {margin-right: 5px;}
 
-        .dropdown-group select {width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; margin-top: 5px;}
+        .dropdown-group select {width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-top: 5px; background-color: #fff;}
 
         .button-group {display: flex; gap: 10px; margin-bottom: 20px;}
 
-        button {flex: 1; padding: 10px 15px; background-color: #FF007F; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; transition: background-color 0.2s ease;}
+        button {flex: 1; padding: 10px 15px; background-color: #444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; transition: background-color 0.2s ease;}
 
-        button:hover {background-color: #CC005F;}
+        button:hover {background-color: #666;}
 
-        #copyButton {background-color: #FF007F;}
+        #copyButton {background-color: #444;}
 
-        #copyButton:hover {background-color: #CC005F;}
+        #copyButton:hover {background-color: #666;}
 
-        #printButton {background-color: #FF007F;}
+        #printButton {background-color: #444;}
 
-        #printButton:hover {background-color: #CC005F;}
+        #printButton:hover {background-color: #666;}
 
         .message-box {background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; border-radius: 4px; margin-top: 10px; text-align: center; display: none;}
 
         .output-section {margin-top: 20px;}
 
-        .output-section h2 {margin-bottom: 10px; color: #0056b3;}
+        .output-section h2 {margin-bottom: 10px; color: #333;}
 
         .output-table-container {overflow-x: auto; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 5px;}
 
-        .output-table {width: 100%; border-collapse: collapse; min-width: 600px; border: 2px solid #FF007F;}
+        .output-table {width: 100%; border-collapse: collapse; min-width: 600px; border: 1px solid #ddd;}
 
-        .output-table th, .output-table td {border: 1px solid #FF007F; padding: 8px; text-align: left; white-space: nowrap;}
+        .output-table th, .output-table td {border: 1px solid #ddd; padding: 8px; text-align: left; white-space: nowrap;}
 
-        .output-table th {background-color: #ffe6f5; color: #E6006F; font-weight: bold;}
+        .output-table th {background-color: #f0f0f0; color: #333; font-weight: bold;}
 
-        .output-table tr:nth-child(even) {background-color: #ffe6f5;}
+        .output-table tr:nth-child(even) {background-color: #f9f9f9;}
 
 
 
@@ -115,27 +115,32 @@
 
             .input-section, .button-group, .message-box, #debugOutput, #disclaimerPopup { display: none !important; }
 
-            h1 { text-align: left; margin-left: 20px; color: #E6006F !important; }
+            h1 { text-align: left; margin-left: 20px; color: #333 !important; }
 
-            .output-section h2 { margin-left: 20px; color: #0056b3 !important; }
+            .output-section h2 { margin-left: 20px; color: #333 !important; }
 
             .output-table-container { border: none; margin-left: 20px; margin-right: 20px; overflow-x: visible;}
 
-            .output-table { min-width: unset; width: auto; background-color: #fff !important; border: 2px solid #FF007F !important; } 
+            .output-table { min-width: unset; width: auto; background-color: #fff !important; border: 1px solid #000 !important; } 
 
-            .output-table th, .output-table td { white-space: normal; padding: 5px; border: 1px solid #FF007F !important; background-color: #fff !important; color: #000 !important; } 
+            .output-table th, .output-table td { white-space: normal; padding: 5px; border: 1px solid #000 !important; background-color: #fff !important; color: #000 !important; } 
 
-            .output-table th { background-color: #ffe6f5 !important; color: #E6006F !important; font-weight: bold; }
+            .output-table th { background-color: #f0f0f0 !important; color: #000 !important; font-weight: bold; }
 
-            .output-table tr:nth-child(even) { background-color: #ffe6f5 !important; }
+            .output-table tr:nth-child(even) { background-color: #f9f9f9 !important; }
 
-            .output-table tr:nth-child(even) td { background-color: #ffe6f5 !important; }
+            .output-table tr:nth-child(even) td { background-color: #f9f9f9 !important; }
 
-            .arrivals-text { color: green !important; font-weight: bold; }
+            .arrivals-text { color: #006600 !important; font-weight: bold; }
 
-            .departures-text { color: red !important; font-weight: bold; }
+            .departures-text { color: #990000 !important; font-weight: bold; }
 
             #arrivalDepartureTable { width: 100%; } 
+
+            /* Allow Roster table to span multiple pages */
+            #rosterOutputTable { page-break-inside: auto !important; }
+
+            #rosterOutputTable tbody tr { page-break-inside: avoid; }
 
         }
 
@@ -163,96 +168,96 @@
 
         [data-theme="dark"] .container {
             background-color: #2d2d2d;
-            border: 1px solid #404040;
+            border: 1px solid #555;
         }
 
         [data-theme="dark"] h1 {
-            color: #4a9eff;
+            color: #ffffff;
         }
 
         [data-theme="dark"] textarea {
             background-color: #3a3a3a;
             color: #e0e0e0;
-            border: 1px solid #555;
+            border: 1px solid #666;
         }
 
         [data-theme="dark"] .input-section {
-            background-color: #2a2a2a;
-            border: 1px solid #404040;
+            background-color: #333;
+            border: 1px solid #555;
         }
 
         [data-theme="dark"] .dropdown-group select {
             background-color: #3a3a3a;
             color: #e0e0e0;
-            border: 1px solid #555;
+            border: 1px solid #666;
         }
 
         [data-theme="dark"] button {
-            background-color: #FF007F;
+            background-color: #666;
         }
 
         [data-theme="dark"] button:hover {
-            background-color: #CC005F;
+            background-color: #888;
         }
 
         [data-theme="dark"] #copyButton {
-            background-color: #FF007F;
+            background-color: #666;
         }
 
         [data-theme="dark"] #copyButton:hover {
-            background-color: #CC005F;
+            background-color: #888;
         }
 
         [data-theme="dark"] #printButton {
-            background-color: #FF007F;
+            background-color: #666;
         }
 
         [data-theme="dark"] #printButton:hover {
-            background-color: #CC005F;
+            background-color: #888;
         }
 
         [data-theme="dark"] .output-table {
             background-color: #2d2d2d;
-            border: 2px solid #FF007F;
+            border: 1px solid #555;
         }
 
         [data-theme="dark"] .output-table th {
-            background-color: #4D0026;
-            color: #ffccee;
-            border: 1px solid #FF007F;
+            background-color: #444;
+            color: #ffffff;
+            border: 1px solid #555;
             font-weight: bold;
         }
 
         [data-theme="dark"] .output-table td {
-            border: 1px solid #FF007F;
+            border: 1px solid #555;
             color: #e0e0e0;
         }
 
         [data-theme="dark"] .output-table tr:nth-child(even) {
-            background-color: #400022;
+            background-color: #333;
         }
 
         [data-theme="dark"] .output-table-container {
-            border: 2px solid #FF007F;
+            border: 1px solid #555;
         }
 
         [data-theme="dark"] .disclaimer-popup {
-            background-color: #330022;
-            border: 2px solid #FF007F;
+            background-color: #2d2d2d;
+            border: 1px solid #555;
             color: #e0e0e0;
         }
 
         [data-theme="dark"] .disclaimer-header {
-            background-color: #FF007F;
+            background-color: #444;
         }
 
         [data-theme="dark"] .theme-toggle {
-            background-color: #FF007F;
+            background-color: #666;
             color: #fff;
         }
 
         [data-theme="dark"] .theme-toggle:hover {
-            background-color: #CC005F;
+            background-color: #888;
         }
 
         /* Dark mode toggle button */
@@ -260,7 +265,7 @@
             position: fixed;
             top: 20px;
             left: 20px;
-            background-color: #007bff;
+            background-color: #666;
             color: white;
             border: none;
             border-radius: 50%;
@@ -276,16 +281,16 @@
         }
 
         .theme-toggle:hover {
-            background-color: #0056b3;
+            background-color: #888;
         }
 
         [data-theme="dark"] .theme-toggle {
-            background-color: #f48fb1;
-            color: #000;
+            background-color: #888;
+            color: #fff;
         }
 
         [data-theme="dark"] .theme-toggle:hover {
-            background-color: #f06292;
+            background-color: #aaa;
         }
 
         /* Drag and drop styles */
@@ -693,7 +698,25 @@ const EMPLOYEE_SKILLS = {
 
     "Madison Walker": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
 
-    "Jackson Weaver": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"]
+    "Jackson Weaver": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
+    
+    "Darnellius Bell" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
+    
+    "Phillip Chesnutt" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
+    
+    "Katelyn Lingren" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
+    
+    "Keli Mitzel" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
+    
+    "Connor Mullen" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
+    
+    "Caleb Scarlett" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
+    
+    "Zade Simonds" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
+    
+    "James Toth" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
+    
+    "Dominick Toth" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"]
 };
 
 
@@ -840,100 +863,127 @@ const EMPLOYEE_SKILLS = {
             
             showMessage('Generating PDF, please wait...', 'success');
             
-            // Create a temporary container that includes all visible plan content
-            const tempContainer = document.createElement('div');
-            tempContainer.style.cssText = `
-                position: absolute;
-                left: -9999px;
-                top: 0;
-                width: ${planOutput.offsetWidth}px;
-                background: white;
-                padding: 20px;
-                font-family: Arial, sans-serif;
-            `;
+            // Fix jsPDF reference for UMD build
+            const jsPDF = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
+            const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
             
-            // Clone the plan output content
-            const planClone = planOutput.cloneNode(true);
-            tempContainer.appendChild(planClone);
-            
-            // Add closing tasks if they exist and are visible
-            if (closingTasksOutput && closingTasksOutput.style.display !== 'none' && closingTasksOutput.innerHTML.trim()) {
-                const closingTasksClone = closingTasksOutput.cloneNode(true);
-                closingTasksClone.style.display = 'block';
-                tempContainer.appendChild(closingTasksClone);
-            }
-            
-            // Append to body temporarily
-            document.body.appendChild(tempContainer);
-            
-            // Generate PDF from the complete content
-            html2canvas(tempContainer, { 
-                scale: 2,
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: '#ffffff'
-            }).then(canvas => {
-                // Remove temporary container
-                document.body.removeChild(tempContainer);
+            // Function to capture and add a table to PDF
+            const addTableToPDF = async (element, title, isFirstPage = false) => {
+                if (!element) return;
                 
-                const imgData = canvas.toDataURL('image/png');
-                // Fix jsPDF reference for UMD build
-                const jsPDF = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
-                const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
-                const pageWidth = pdf.internal.pageSize.getWidth();
-                const pageHeight = pdf.internal.pageSize.getHeight();
+                // Create a temporary container for this specific element
+                const tempContainer = document.createElement('div');
+                tempContainer.style.cssText = `
+                    position: absolute;
+                    left: -9999px;
+                    top: 0;
+                    width: ${planOutput.offsetWidth}px;
+                    background: white;
+                    padding: 20px;
+                    font-family: Arial, sans-serif;
+                `;
                 
-                // Calculate image dimensions to fit page
-                const imgWidth = pageWidth - 40;
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-                let y = 20;
+                // Add title if provided
+                if (title) {
+                    const titleElement = document.createElement('h2');
+                    titleElement.textContent = title;
+                    titleElement.style.cssText = 'color: #333; margin-bottom: 10px;';
+                    tempContainer.appendChild(titleElement);
+                }
                 
-                if (imgHeight < pageHeight - 40) {
-                    pdf.addImage(imgData, 'PNG', 20, y, imgWidth, imgHeight);
-                } else {
-                    // Multi-page logic
-                    let remainingHeight = imgHeight;
-                    let sourceY = 0;
+                // Clone the element
+                const elementClone = element.cloneNode(true);
+                tempContainer.appendChild(elementClone);
+                
+                // Append to body temporarily
+                document.body.appendChild(tempContainer);
+                
+                try {
+                    const canvas = await html2canvas(tempContainer, { 
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: true,
+                        backgroundColor: '#ffffff'
+                    });
                     
-                    while (remainingHeight > 0) {
-                        const pageContentHeight = Math.min(remainingHeight, pageHeight - 40);
-                        const scaledSourceY = sourceY * canvas.height / imgHeight;
-                        const scaledContentHeight = pageContentHeight * canvas.height / imgHeight;
-                        
-                        // Create a canvas for this page
-                        const pageCanvas = document.createElement('canvas');
-                        pageCanvas.width = canvas.width;
-                        pageCanvas.height = scaledContentHeight;
-                        const pageCtx = pageCanvas.getContext('2d');
-                        
-                        pageCtx.drawImage(
-                            canvas, 
-                            0, scaledSourceY, canvas.width, scaledContentHeight,
-                            0, 0, canvas.width, scaledContentHeight
-                        );
-                        
-                        const pageImgData = pageCanvas.toDataURL('image/png');
-                        pdf.addImage(pageImgData, 'PNG', 20, y, imgWidth, pageContentHeight);
-                        
-                        remainingHeight -= pageContentHeight;
-                        sourceY += pageContentHeight;
-                        
-                        if (remainingHeight > 0) {
-                            pdf.addPage();
-                            y = 20;
-                        }
-                    }
-                }
-                
-                pdf.save('ShiftPlan.pdf');
-                showMessage('PDF downloaded!', 'success');
-            }).catch(err => {
-                // Remove temporary container if there's an error
-                if (document.body.contains(tempContainer)) {
+                    // Remove temporary container
                     document.body.removeChild(tempContainer);
+                    
+                    const imgData = canvas.toDataURL('image/png');
+                    const imgWidth = pageWidth - 40;
+                    const imgHeight = canvas.height * imgWidth / canvas.width;
+                    
+                    // Add new page if not the first page
+                    if (!isFirstPage) {
+                        pdf.addPage();
+                    }
+                    
+                    // Add image to PDF
+                    pdf.addImage(imgData, 'PNG', 20, 20, imgWidth, imgHeight);
+                    
+                } catch (err) {
+                    // Remove temporary container if there's an error
+                    if (document.body.contains(tempContainer)) {
+                        document.body.removeChild(tempContainer);
+                    }
+                    throw err;
                 }
-                showMessage('Failed to generate PDF: ' + err, 'error');
-            });
+            };
+            
+            // Process each table section separately
+            (async () => {
+                try {
+                    let isFirstPage = true;
+                    
+                    // 1. Lineup Table
+                    const lineupTable = document.getElementById('lineupOutputTable');
+                    if (lineupTable) {
+                        await addTableToPDF(lineupTable.closest('.output-table-container'), 'Lineup', isFirstPage);
+                        isFirstPage = false;
+                    }
+                    
+                    // 2. Closing Tasks (if night shift)
+                    const closingTasksTable = document.getElementById('closingTasksTable');
+                    if (closingTasksTable && closingTasksOutput && closingTasksOutput.style.display !== 'none') {
+                        await addTableToPDF(closingTasksTable.closest('.output-table-container'), 'Closing Tasks (10:30 PM)', isFirstPage);
+                        isFirstPage = false;
+                    }
+                    
+                    // 3. Roster Table
+                    const rosterTable = document.getElementById('rosterOutputTable');
+                    if (rosterTable) {
+                        await addTableToPDF(rosterTable.closest('.output-table-container'), 'Roster', isFirstPage);
+                        isFirstPage = false;
+                    }
+                    
+                    // 4. Staffing Table
+                    const staffingTable = document.getElementById('staffingOutputTable');
+                    if (staffingTable) {
+                        const shiftTypeRadio = document.querySelector('input[name="shiftType"]:checked');
+                        const shiftType = shiftTypeRadio ? shiftTypeRadio.value : 'day';
+                        const staffingTitle = `Staffing Levels Per Half Hour (${shiftType.charAt(0).toUpperCase() + shiftType.slice(1)} Shift)`;
+                        await addTableToPDF(staffingTable.closest('.output-table-container'), staffingTitle, isFirstPage);
+                        isFirstPage = false;
+                    }
+                    
+                    // 5. Arrival/Departure Table
+                    const arrivalDepartureTable = document.getElementById('arrivalDepartureTable');
+                    if (arrivalDepartureTable) {
+                        const shiftTypeRadio = document.querySelector('input[name="shiftType"]:checked');
+                        const shiftType = shiftTypeRadio ? shiftTypeRadio.value : 'day';
+                        const adTitle = `Employee Arrivals & Departures (${shiftType.charAt(0).toUpperCase() + shiftType.slice(1)} Shift)`;
+                        await addTableToPDF(arrivalDepartureTable.closest('.output-table-container'), adTitle, isFirstPage);
+                    }
+                    
+                    pdf.save('ShiftPlan.pdf');
+                    showMessage('PDF downloaded!', 'success');
+                    
+                } catch (err) {
+                    showMessage('Failed to generate PDF: ' + err, 'error');
+                }
+            })();
         }
 
         // If there is a print button, update its onclick to use the new function
