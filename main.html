@@ -1,1679 +1,1112 @@
 <!DOCTYPE html>
-
-<html lang="en">
-
+<html lang="en" class="h-full bg-slate-950">
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Shift Planner Application</title>
-
+    <title>🎵 Music Bingo - Game Master Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Dashboard Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f5f5f5;
-            color: #222;
+            font-family: 'Inter', sans-serif;
         }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            border: 1px solid #ddd;
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
         }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.45);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            min-height: 150px;
-            font-family: monospace;
-            background-color: #fff;
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
-
-        .input-section {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
+        ::-webkit-scrollbar-track {
+            background: #020617;
         }
-
-        .input-section label {font-weight: bold; display: block; margin-bottom: 10px;}
-
-        .radio-group {display: flex; align-items: center; gap: 5px;}
-
-        .radio-group label {font-weight: normal; margin-right: 15px; margin-bottom: 0; display: inline-block;}
-
-        .radio-group input[type="radio"] {margin-right: 5px;}
-
-        .dropdown-group select {width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-top: 5px; background-color: #fff;}
-
-        .button-group {display: flex; gap: 10px; margin-bottom: 20px;}
-
-        button {flex: 1; padding: 10px 15px; background-color: #444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; transition: background-color 0.2s ease;}
-
-        button:hover {background-color: #666;}
-
-        #copyButton {background-color: #444;}
-
-        #copyButton:hover {background-color: #666;}
-
-        #printButton {background-color: #444;}
-
-        #printButton:hover {background-color: #666;}
-
-        .message-box {background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; border-radius: 4px; margin-top: 10px; text-align: center; display: none;}
-
-        .output-section {margin-top: 20px;}
-
-        .output-section h2 {margin-bottom: 10px; color: #333;}
-
-        .output-table-container {overflow-x: auto; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 5px;}
-
-        .output-table {width: 100%; border-collapse: collapse; min-width: 600px; border: 1px solid #ddd;}
-
-        .output-table th, .output-table td {border: 1px solid #ddd; padding: 8px; text-align: left; white-space: nowrap;}
-
-        .output-table th {background-color: #f0f0f0; color: #333; font-weight: bold;}
-
-        .output-table tr:nth-child(even) {background-color: #f9f9f9;}
-
-
-
-        #arrivalDepartureTable td { white-space: normal; word-break: break-word; vertical-align: top; }
-
-        .arrivals-text { color: green; font-weight: bold; }
-
-        .departures-text { color: red; font-weight: bold; }
-
-
-        #tempClipboard {position: absolute; left: -9999px;}
-
-        #debugOutput {display: none;} 
-
-
-        @media print {
-
-            body { margin: 0; background-color: #fff !important; color: #000 !important; }
-
-            .container { box-shadow: none; border-radius: 0; padding: 0; max-width: 100%; background-color: #fff !important; border: none !important; }
-
-            .input-section, .button-group, .message-box, #debugOutput, #disclaimerPopup { display: none !important; }
-
-            h1 { text-align: left; margin-left: 20px; color: #333 !important; }
-
-            .output-section h2 { margin-left: 20px; color: #333 !important; }
-
-            .output-table-container { border: none; margin-left: 20px; margin-right: 20px; overflow-x: visible;}
-
-            .output-table { min-width: unset; width: auto; background-color: #fff !important; border: 1px solid #000 !important; } 
-
-            .output-table th, .output-table td { white-space: normal; padding: 5px; border: 1px solid #000 !important; background-color: #fff !important; color: #000 !important; } 
-
-            .output-table th { background-color: #f0f0f0 !important; color: #000 !important; font-weight: bold; }
-
-            .output-table tr:nth-child(even) { background-color: #f9f9f9 !important; }
-
-            .output-table tr:nth-child(even) td { background-color: #f9f9f9 !important; }
-
-            .arrivals-text { color: #006600 !important; font-weight: bold; }
-
-            .departures-text { color: #990000 !important; font-weight: bold; }
-
-            #arrivalDepartureTable { width: 100%; } 
-
-            /* Allow Roster table to span multiple pages */
-            #rosterOutputTable { page-break-inside: auto !important; }
-
-            #rosterOutputTable tbody tr { page-break-inside: avoid; }
-
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 999px;
         }
-
-        .disclaimer-popup { position: fixed; top: 20px; right: 20px; width: 350px; max-width: 90%; background-color: #fff3e0; border: 1px solid #ffcc80; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1001; font-size: 0.85em; color: #5d4037; }
-
-        .disclaimer-header { background-color: #ffa726; color: white; padding: 8px 15px; border-top-left-radius: 7px; border-top-right-radius: 7px; display: flex; justify-content: space-between; align-items: center; }
-
-        .disclaimer-header span { font-weight: bold; }
-
-        .disclaimer-content { padding: 15px; line-height: 1.5; }
-
-        .disclaimer-content p { margin: 0 0 10px 0; }
-
-        .disclaimer-content p:last-child { margin-bottom: 0; }
-
-        .close-btn { background: none; border: none; color: white; font-size: 1.6em; font-weight: bold; cursor: pointer; padding: 0 5px; line-height: 1;}
-
-        .close-btn:hover { color: #fffde7; }
-
-        /* Dark mode styles */
-        [data-theme="dark"] body {
-            background-color: #1a1a1a;
-            color: #e0e0e0;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
         }
-
-        [data-theme="dark"] .container {
-            background-color: #2d2d2d;
-            border: 1px solid #555;
+        /* Glowing effects */
+        .glow-indigo {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
         }
-
-        [data-theme="dark"] h1 {
-            color: #ffffff;
+        .glow-emerald {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
         }
-
-        [data-theme="dark"] textarea {
-            background-color: #3a3a3a;
-            color: #e0e0e0;
-            border: 1px solid #666;
+        /* Keyframe animation for verified bingo alert */
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+            50% { border-color: rgba(16, 185, 129, 1); box-shadow: 0 0 35px rgba(16, 185, 129, 0.6); }
         }
-
-        [data-theme="dark"] .input-section {
-            background-color: #333;
-            border: 1px solid #555;
+        .bingo-glow {
+            animation: pulse-border 1.5s infinite;
         }
-
-        [data-theme="dark"] .dropdown-group select {
-            background-color: #3a3a3a;
-            color: #e0e0e0;
-            border: 1px solid #666;
-        }
-
-        [data-theme="dark"] button {
-            background-color: #666;
-        }
-
-        [data-theme="dark"] button:hover {
-            background-color: #888;
-        }
-
-        [data-theme="dark"] #copyButton {
-            background-color: #666;
-        }
-
-        [data-theme="dark"] #copyButton:hover {
-            background-color: #888;
-        }
-
-        [data-theme="dark"] #printButton {
-            background-color: #666;
-        }
-
-        [data-theme="dark"] #printButton:hover {
-            background-color: #888;
-        }
-
-        [data-theme="dark"] .output-table {
-            background-color: #2d2d2d;
-            border: 1px solid #555;
-        }
-
-        [data-theme="dark"] .output-table th {
-            background-color: #444;
-            color: #ffffff;
-            border: 1px solid #555;
-            font-weight: bold;
-        }
-
-        [data-theme="dark"] .output-table td {
-            border: 1px solid #555;
-            color: #e0e0e0;
-        }
-
-        [data-theme="dark"] .output-table tr:nth-child(even) {
-            background-color: #333;
-        }
-
-        [data-theme="dark"] .output-table-container {
-            border: 1px solid #555;
-        }
-
-        [data-theme="dark"] .disclaimer-popup {
-            background-color: #2d2d2d;
-            border: 1px solid #555;
-            color: #e0e0e0;
-        }
-
-        [data-theme="dark"] .disclaimer-header {
-            background-color: #444;
-        }
-
-        [data-theme="dark"] .theme-toggle {
-            background-color: #666;
-            color: #fff;
-        }
-
-        [data-theme="dark"] .theme-toggle:hover {
-            background-color: #888;
-        }
-
-        /* Dark mode toggle button */
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: #666;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            font-size: 20px;
-            z-index: 1000;
-            transition: background-color 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .theme-toggle:hover {
-            background-color: #888;
-        }
-
-        [data-theme="dark"] .theme-toggle {
-            background-color: #888;
-            color: #fff;
-        }
-
-        [data-theme="dark"] .theme-toggle:hover {
-            background-color: #aaa;
-        }
-
-        /* Drag and drop styles */
-        .draggable-employee {
-            cursor: move;
-            background-color: transparent;
-            border: 1px solid #2196f3;
-            border-radius: 3px;
-            padding: 2px 4px;
-            user-select: none;
-            transition: all 0.2s ease;
-        }
-
-        .draggable-employee:hover {
-            background-color: rgba(187, 222, 251, 0.3);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .dragging {
-            opacity: 0.3;
-            transform: rotate(5deg);
-        }
-
-        .drop-zone {
-            min-height: 25px;
-            border: 2px dashed transparent;
-            transition: all 0.2s ease;
-        }
-
-        .drop-zone.drag-over {
-            border-color: #4caf50;
-            background-color: #e8f5e8;
-        }
-
-        [data-theme="dark"] .draggable-employee {
-            background-color: transparent;
-            border-color: #42a5f5;
-            color: #e0e0e0;
-        }
-
-        [data-theme="dark"] .draggable-employee:hover {
-            background-color: rgba(25, 118, 210, 0.3);
-        }
-
-        [data-theme="dark"] .drop-zone.drag-over {
-            border-color: #66bb6a;
-            background-color: #2e5d2e;
-        }
-
     </style>
-
 </head>
+<body class="h-full text-slate-100 flex flex-col bg-slate-950 overflow-x-hidden">
 
-<body>
-
-    <button id="themeToggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
-
-    <div id="disclaimerPopup" class="disclaimer-popup" style="display: none;">
-
-        <div class="disclaimer-header">
-
-            <span>Important Notice</span>
-
-            <button id="closeDisclaimerBtn" class="close-btn" aria-label="Close Disclaimer">&times;</button>
-
-        </div>
-
-        <div class="disclaimer-content">
-
-            <p>This shift planner provides a guideline based on scheduled availability and may not account for all individual employee skills or specific operational needs.</p>
-
-            <p>Plans generated by this application should be reviewed. This tool does not supersede primary scheduling directives provided by senior leadership.</p>
-
-            <p>This does have *BASIC* Skill Knowledge of our Team Members</p>
-
-            <p>Jesse, I know you saw this :)</p>
-
-        </div>
-
-    </div>
-
-
-    <div class="container">
-
-        <h1>Chick-fil-A Fountain City Shift Planner</h1>
-
-        <p>Paste your raw scheduling data below. The application will then help plan breaks and positions.</p>
-
-        <textarea id="rawDataInput" placeholder="Paste your scheduling data here..." oninput="handleRawDataInput()"></textarea>
-
-
-
-        <div class="input-section">
-
-            <label id="shiftTypeLabel">Select Shift Type:</label>
-
-            <div class="radio-group" role="radiogroup" aria-labelledby="shiftTypeLabel">
-
-                <input type="radio" name="shiftType" value="day" id="shiftTypeDay" checked onchange="updateShiftTypeSpecificUI()">
-
-                <label for="shiftTypeDay">Day Shift</label>
-
-                <input type="radio" name="shiftType" value="night" id="shiftTypeNight" onchange="updateShiftTypeSpecificUI()">
-
-                <label for="shiftTypeNight">Night Shift</label>
-
+    <!-- Top Navigation Header -->
+    <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="h-10 w-10 bg-gradient-to-tr from-violet-600 to-indigo-600 rounded-xl flex items-center justify-center text-white font-extrabold shadow-lg shadow-indigo-500/10">
+                    <i class="fa-solid fa-play"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold text-white tracking-wide flex items-center gap-2">
+                        Music Bingo Dashboard
+                        <span class="text-xs font-normal text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-full">Host Mode</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Manage game loops, draw tracks, and verify cards instantly</p>
+                </div>
             </div>
-
-        </div>
-
-
-        <div class="input-section" id="schoolSessionSection" style="display: none;">
-
-            <label id="schoolSessionLabel">Is School in Session?</label>
-
-            <div class="radio-group" role="radiogroup" aria-labelledby="schoolSessionLabel">
-
-                <input type="radio" name="schoolSession" value="yes" id="schoolSessionYes" checked>
-
-                <label for="schoolSessionYes">Yes (Breaks restricted 7:30-9:00 AM)</label>
-
-                <input type="radio" name="schoolSession" value="no" id="schoolSessionNo">
-
-                <label for="schoolSessionNo">No (Breaks restricted 9:30-10:30 AM)</label>
-
-            </div>
-
-        </div>
-
-
-        <div class="input-section dropdown-group">
-
-            <label for="shiftLeaderSelect">Assign Shift Leader:</label>
-
-            <select id="shiftLeaderSelect"><option value="">-- Select Shift Leader (Optional) --</option></select>
-
-            <small style="display: block; margin-top: 5px; color: #666;">Click "Plan Shift" after selecting to update the lineup.</small>
-
-        </div>
-
-        <div class="input-section dropdown-group" id="checklistPersonSection" style="display: none;">
-
-            <label for="checklistPersonSelect">Assign Checklist Person (Night Shift Only):</label>
-
-            <select id="checklistPersonSelect"><option value="">-- Select Checklist Person (Optional) --</option></select>
-
-            <small style="display: block; margin-top: 5px; color: #666;">Click "Plan Shift" after selecting to update the lineup.</small>
-
-        </div>
-
-        <div class="button-group">
-            <button type="button" onclick="planShift()">Plan Shift</button>
-            <button type="button" id="copyButton" onclick="copyPlanToClipboard()">Copy Plan to Clipboard</button>
-            <button type="button" id="printButton" onclick="downloadPlanAsPDF()">Download PDF</button>
-            <!-- New Login button -->
-            <a href="https://www.hotschedules.com/hs/login.jsp" target="_blank">
-                <button style="background-color: #007bff; color: white; border: none; border-radius: 4px; padding: 10px 15px; font-size: 16px; cursor: pointer;">
-                    Login to HotSchedules
+            
+            <div class="flex flex-wrap items-center gap-3">
+                <!-- Status badging -->
+                <div class="flex items-center gap-2 text-xs bg-slate-900 border border-slate-800 px-3.5 py-2 rounded-xl">
+                    <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    <span class="text-slate-300 font-medium">Session Sync Active</span>
+                </div>
+                
+                <!-- Quick Sound Control -->
+                <button id="toggleTts" class="flex items-center gap-2 text-xs bg-slate-900 hover:bg-slate-800 border border-slate-800 px-3.5 py-2 rounded-xl text-slate-300 transition-all">
+                    <i id="ttsIcon" class="fa-solid fa-volume-high text-indigo-400"></i>
+                    <span>Voice Announcements: <strong id="ttsStatus">ON</strong></span>
                 </button>
-            </a>
-        </div>
 
-        <div id="messageBox" class="message-box" aria-live="polite"></div>
-
-        <div class="output-section" id="debugOutput">
-
-            <h2>Employees Available Per Peak (Debug):</h2><pre id="peakAvailabilityOutput"></pre>
-
-            <h2>Break Slot Counts (Debug):</h2><pre id="breakCountsOutput"></pre>
-
-        </div>
-
-        <div class="output-section" id="planOutput"></div>
-
-        <div class="output-section" id="closingTasksOutput" style="display: none;">
-            <h2>Closing Tasks (10:30 PM)</h2>
-            <div class="output-table-container">
-                <table id="closingTasksTable" class="output-table">
-                    <thead>
-                        <tr>
-                            <th>Task</th>
-                            <th>Assigned Employee</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <!-- Audio Beep Toggle -->
+                <button id="toggleSynth" class="flex items-center gap-2 text-xs bg-slate-900 hover:bg-slate-800 border border-slate-800 px-3.5 py-2 rounded-xl text-slate-300 transition-all">
+                    <i id="synthIcon" class="fa-solid fa-music text-emerald-400"></i>
+                    <span>Sound Effects: <strong id="synthStatus">ON</strong></span>
+                </button>
             </div>
         </div>
+    </header>
 
-        <textarea id="tempClipboard"></textarea>
+    <!-- Main Workspace -->
+    <main class="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 overflow-y-auto">
+        
+        <!-- Left Panel: Game Controller (Draw Pool, Call Loop) (lg:col-span-4) -->
+        <section class="lg:col-span-4 flex flex-col gap-6">
+            
+            <!-- Game Summary Card -->
+            <div class="glass-panel rounded-3xl p-6 shadow-2xl glow-indigo flex flex-col gap-5 relative overflow-hidden">
+                <div class="absolute -right-6 -top-6 text-slate-800/10 text-9xl font-bold select-none pointer-events-none">
+                    42
+                </div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h2 class="text-sm font-bold text-indigo-400 uppercase tracking-widest">Active Game Loop</h2>
+                        <h3 id="currentSongDisplay" class="text-2xl font-extrabold text-white mt-1 truncate max-w-[240px]">No Song Called Yet</h3>
+                        <p id="currentArtistDisplay" class="text-xs text-slate-400 mt-0.5">Click "Draw Song" to kick off play</p>
+                    </div>
+                    <div id="drawCounter" class="bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 text-xs font-bold font-mono px-3 py-1.5 rounded-lg">
+                        0/42 CALLED
+                    </div>
+                </div>
 
-    </div>
+                <!-- Giant Draw Button -->
+                <button id="btnDraw" class="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-extrabold text-base py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-600/20">
+                    <i class="fa-solid fa-shuffle text-lg"></i>
+                    Draw Next Bingo Song
+                </button>
 
+                <!-- Caller Progress Track bar -->
+                <div>
+                    <div class="flex justify-between text-xs text-slate-400 mb-1.5">
+                        <span>Completion Rate</span>
+                        <span id="txtCompletion">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-950/80 rounded-full h-3 p-0.5 border border-slate-800">
+                        <div id="drawProgress" class="bg-gradient-to-r from-indigo-500 to-emerald-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Game Mode Selector -->
+                <div class="border-t border-slate-800/50 pt-4 grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Win Requirement</label>
+                        <select id="selGameMode" class="w-full text-xs bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-2.5 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                            <option value="1line" selected>1 Line (Any Way)</option>
+                            <option value="2lines">2 Lines (Horizontal/Vert)</option>
+                            <option value="corners">4 Corners</option>
+                            <option value="xshape">X-Shape (Both Diagonals)</option>
+                            <option value="fullhouse">Full House (Blackout)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Draw Timer Interval</label>
+                        <div class="flex gap-1.5">
+                            <select id="selTimerDuration" class="flex-1 text-xs bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-2.5 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                                <option value="15">15 Sec</option>
+                                <option value="30" selected>30 Sec</option>
+                                <option value="60">60 Sec</option>
+                                <option value="90">90 Sec</option>
+                            </select>
+                            <button id="btnAutoCall" class="bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-400 p-2.5 rounded-xl transition-all flex items-center justify-center w-11 h-10" title="Start auto caller loop">
+                                <i id="autoCallIcon" class="fa-solid fa-play"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Selection Panel -->
+                <div class="border-t border-slate-800/50 pt-4">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Manual Draw Fallback</label>
+                    <div class="flex gap-2">
+                        <select id="selManualSong" class="flex-1 text-xs bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-2.5 focus:ring-1 focus:ring-indigo-500 focus:outline-none max-w-[210px] truncate">
+                            <option value="" disabled selected>Choose song to force call...</option>
+                            <!-- Populated in scripts -->
+                        </select>
+                        <button id="btnManualCall" class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 font-bold px-4 py-2.5 rounded-xl transition-all border border-slate-700/50">
+                            Call It
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drawn History List -->
+            <div class="glass-panel rounded-3xl p-6 shadow-2xl flex-1 flex flex-col max-h-[380px] overflow-hidden">
+                <div class="flex justify-between items-center border-b border-slate-800/60 pb-3 mb-3 shrink-0">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-history text-slate-400"></i>
+                        Drawn Tracks History
+                    </h3>
+                    <button id="btnClearHistory" class="text-[10px] bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-400 px-2.5 py-1 rounded-md transition-all font-semibold">
+                        Reset Game
+                    </button>
+                </div>
+                <div id="historyPlaceholder" class="flex-1 flex flex-col items-center justify-center text-center p-4">
+                    <i class="fa-solid fa-music text-slate-700 text-3xl mb-2"></i>
+                    <p class="text-xs text-slate-500">History log is empty.<br>Start drawing tracks to log sequences.</p>
+                </div>
+                <div id="historyList" class="flex-1 overflow-y-auto hidden space-y-2.5 pr-1">
+                    <!-- Appended dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Center Panel: The Master Board Grid (lg:col-span-5) -->
+        <section class="lg:col-span-5 flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-bold text-slate-400 tracking-wider uppercase flex items-center gap-2">
+                    <i class="fa-solid fa-border-all text-slate-500"></i>
+                    Host Master Playlist Board
+                </h3>
+                <span class="text-[10px] bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded-md font-mono">Total Tracks: 42</span>
+            </div>
+
+            <div class="glass-panel rounded-3xl p-5 shadow-2xl flex-1 grid grid-cols-6 sm:grid-cols-7 gap-2 h-fit bg-slate-950/40">
+                <!-- 42 tracks rendered as buttons -->
+                <!-- We render numbers 1 through 42 sequentially -->
+                <script>
+                    const masterTracksCount = 42;
+                    for (let i = 1; i <= masterTracksCount; i++) {
+                        document.write(`
+                            <button id="masterCell-${i}" onclick="toggleSongFromBoard(${i})" class="group aspect-square relative bg-slate-900 hover:bg-slate-800 text-slate-400 border border-slate-800 hover:border-slate-700 rounded-xl transition-all flex flex-col items-center justify-center p-1 cursor-pointer">
+                                <span class="text-lg font-black font-mono leading-none group-hover:scale-110 transition-transform">${i}</span>
+                                <span id="masterTip-${i}" class="absolute bottom-1 text-[8px] font-mono opacity-30 group-hover:opacity-60 truncate max-w-full px-0.5">Track ${i}</span>
+                            </button>
+                        `);
+                    }
+                </script>
+            </div>
+            
+            <!-- Technical playlist stats tracking -->
+            <div class="glass-panel rounded-2xl p-4 flex justify-between items-center text-xs">
+                <div class="flex items-center gap-2">
+                    <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                    <span class="text-slate-400">Green = Called</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="h-2 w-2 rounded-full bg-slate-800 border border-slate-700"></span>
+                    <span class="text-slate-400">Slate = Still in deck</span>
+                </div>
+                <div class="text-slate-400">
+                    Click cells to manually toggle draw state
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Panel: Card Validator & Verification Console (lg:col-span-3) -->
+        <section class="lg:col-span-3 flex flex-col gap-6">
+            
+            <!-- Visual Target Selector -->
+            <div class="glass-panel rounded-3xl p-6 shadow-2xl flex flex-col gap-4">
+                <div class="border-b border-slate-800/60 pb-3">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-qrcode text-indigo-400"></i>
+                        Live Card Checker
+                    </h3>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Inspect physical bingo sheet matches</p>
+                </div>
+
+                <!-- Input selectors for fast review -->
+                <div class="flex flex-col gap-3">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Verify by Card ID (1-75)</label>
+                        <select id="selCardId" class="w-full text-xs bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-2.5 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                            <option value="" disabled selected>Select player card number...</option>
+                            <!-- Script will populate with option elements for Cards 1–75 -->
+                        </select>
+                    </div>
+
+                    <div class="relative flex py-2 items-center">
+                        <div class="flex-grow border-t border-slate-800/80"></div>
+                        <span class="flex-shrink mx-3 text-[10px] text-slate-500 font-bold uppercase tracking-widest">or custom QR string</span>
+                        <div class="flex-grow border-t border-slate-800/80"></div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Paste comma-separated data</label>
+                        <div class="flex gap-1.5">
+                            <input type="text" id="rawQrInput" placeholder="30, 23, 42, 14, 26..." class="flex-1 text-xs bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-2.5 focus:ring-1 focus:ring-indigo-500 focus:outline-none placeholder-slate-600 code-font">
+                            <button id="btnVerifyRaw" class="bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 text-indigo-300 text-xs px-3.5 rounded-xl transition-all font-bold">
+                                Verify
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5x5 Virtual Card preview renderer container -->
+            <div id="virtualCardContainer" class="glass-panel rounded-3xl p-5 shadow-2xl flex flex-col gap-4 flex-1 bg-slate-950/40 relative">
+                
+                <!-- Fallback selection state panel -->
+                <div id="cardFallbackState" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-slate-900/40 rounded-3xl z-10">
+                    <i class="fa-solid fa-magnifying-glass text-slate-700 text-4xl mb-3"></i>
+                    <h4 class="text-sm font-bold text-slate-200">No Card Loaded</h4>
+                    <p class="text-[10px] text-slate-500 max-w-[200px] mt-1">Select a Card ID or enter a QR code to run validation checks.</p>
+                </div>
+
+                <div class="flex items-center justify-between border-b border-slate-800/60 pb-3 shrink-0">
+                    <span id="txtCardViewerLabel" class="text-xs font-bold text-indigo-400 tracking-wider font-mono">PLAYER CARD</span>
+                    <span id="txtCardWinStatus" class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider">Unchecked</span>
+                </div>
+
+                <!-- 5x5 Grid Wrapper -->
+                <div class="grid grid-cols-5 gap-1.5 flex-1 items-stretch aspect-square relative max-h-[300px]">
+                    <!-- Loop to generate grid layout block containers -->
+                    <script>
+                        for (let row = 0; row < 5; row++) {
+                            for (let col = 0; col < 5; col++) {
+                                document.write(`
+                                    <div id="cell-${row}-${col}" class="flex flex-col items-center justify-center rounded-lg p-0.5 border border-slate-800/60 bg-slate-950 text-center relative overflow-hidden transition-all select-none">
+                                        <span id="cellNum-${row}-${col}" class="text-[11px] sm:text-xs font-black font-mono leading-none text-slate-600">?</span>
+                                        <span id="cellTitle-${row}-${col}" class="text-[6px] text-slate-500 font-bold tracking-tight truncate max-w-full px-0.5 mt-1 hidden sm:block"></span>
+                                        <div id="cellDot-${row}-${col}" class="absolute h-1.5 w-1.5 bg-emerald-500 rounded-full bottom-1 hidden"></div>
+                                    </div>
+                                `);
+                            }
+                        }
+                    </script>
+                </div>
+
+                <!-- Verified Bingo Glowing Toast banner -->
+                <div id="verifiedBanner" class="hidden shrink-0 bg-emerald-950/60 border border-emerald-500 text-emerald-400 p-3 rounded-2xl flex items-center gap-2.5 shadow-lg shadow-emerald-500/10">
+                    <div class="h-8 w-8 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center font-black animate-bounce text-sm">
+                        🏆
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-extrabold text-white">BINGO PATTERN DETECTED!</h4>
+                        <p class="text-[9px] text-emerald-300" id="txtBannerDetails">Winning combinations matched successfully</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer copyright note -->
+    <footer class="border-t border-slate-800/80 py-4 px-6 text-center text-xs text-slate-500 shrink-0 bg-slate-950">
+        Music Bingo Game Master Utility Engine. Sandboxed offline browser local processes.
+    </footer>
 
     <script>
-
-        // --- UTILITY FUNCTIONS ---
-
-        function timeToMinutes(timeStr) { if (!timeStr) return -1; const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i); if (!match) { /* console.warn("timeToMinutes failed for:", timeStr); */ return -1; } let h = parseInt(match[1]); const m = parseInt(match[2]); const p = match[3].toLowerCase(); if (p === 'pm' && h !== 12) h += 12; else if (p === 'am' && h === 12) h = 0; return h * 60 + m; }
-
-        function minutesToTime(totalMinutes) { const h = Math.floor(totalMinutes / 60); const m = totalMinutes % 60; const period = h >= 12 && h < 24 ? 'PM' : 'AM'; let dH = h % 12; if (dH === 0) dH = 12; const dM = m < 10 ? '0' + m : m; return `${dH}:${dM} ${period}`; };
-
-
-
-        // --- APPLICATION CONFIGURATION ---
-
-        const APP_CONFIG = {
-
-            PEAK_HOURS: {
-
-                day: [ 
-
-                    { name: 'Breakfast', start: timeToMinutes("7:30AM"), end: timeToMinutes("9:00AM"), colHeader: 'Breakfast' },
-
-                    // ** MODIFIED Lunch Peak Definition for Day Shift **
-
-                    { name: 'Lunch Core', start: timeToMinutes("12:00PM"), end: timeToMinutes("1:00PM"), colHeader: 'Lunch (12-1p)' }
-
-                ],
-
-                night: [ 
-
-                    { name: 'Dinner Core', start: timeToMinutes("6:00PM"), end: timeToMinutes("7:00PM"), colHeader: 'Dinner (6-7p)' }, 
-
-                    { name: '9-10pm', start: timeToMinutes("9:00PM"), end: timeToMinutes("10:00PM"), colHeader: '9-10pm' }
-
-                ]
-
-            },
-
-            DAY_SHIFT_MID_MORNING_PEAK_SCHOOL_OUT: { name: 'Mid-Morning Rush', start: timeToMinutes("9:30AM"), end: timeToMinutes("10:30AM"), colHeader: '9:30-10:30am' },
-
-            DAY_SHIFT_BREAKFAST_RESTRICTIONS: { schoolInSession: { start: timeToMinutes("7:30AM"), end: timeToMinutes("9:00AM") }, schoolNotInSession: { start: timeToMinutes("9:30AM"), end: timeToMinutes("10:30AM") } },
-
-            UNIVERSAL_BREAK_RESTRICTIONS: [ { start: timeToMinutes("11:30AM"), end: timeToMinutes("1:00PM") }, { start: timeToMinutes("1:00PM"), end: timeToMinutes("2:00PM") }, { start: timeToMinutes("5:30PM"), end: timeToMinutes("7:00PM") } ],
-
-            SHIFT_TIME_RANGES: { day: { start: 300, end: 840 }, night: { start: 840, end: 1380 } }, // 5AM-2PM, 2PM-11PM
-
-            LINEUP_POSITIONS_DETAILS: [ { id: 1, amBuildTo: "Cash 1", pmBuildTo: "Cash 1" }, { id: 2, amBuildTo: "Cash 2", pmBuildTo: "Cash 2" },{ id: 3, amBuildTo: "DT Stager/Door", pmBuildTo: "DT Stager/Door" }, { id: 4, amBuildTo: "DT Bagger", pmBuildTo: "DT Bagger" },{ id: 5, amBuildTo: "DT Drinks", pmBuildTo: "DT Drinks" }, { id: 6, amBuildTo: "Register 1", pmBuildTo: "Register 1" },{ id: 7, amBuildTo: "FC Expo", pmBuildTo: "FC Expo" }, { id: 8, amBuildTo: "FC Bagger", pmBuildTo: "FC Bagger" },{ id: 9, amBuildTo: "DT Stuffer/hurricane", pmBuildTo: "DT Stuffer/hurricane" }, { id: 10, amBuildTo: "Headset 3", pmBuildTo: "Headset 3" },{ id: 11, amBuildTo: "FC Drinks/Register 2", pmBuildTo: "FC Drinks/Register 2" }, { id: 12, amBuildTo: "Shift Lead/Stocker", pmBuildTo: "Desserts" },{ id: 13, amBuildTo: "Headset 4", pmBuildTo: "Register 2" }, { id: 14, amBuildTo: "Register 2", pmBuildTo: "Headset 4" },{ id: 15, amBuildTo: "Desserts", pmBuildTo: "Shift Lead" }, { id: 16, amBuildTo: "OS Expo", pmBuildTo: "OS Expo" },{ id: 17, amBuildTo: "Hospitalilty", pmBuildTo: "Hospitality" }, { id: 18, amBuildTo: "FC Stager", pmBuildTo: "Middle Bagger" },{ id: 19, amBuildTo: "Headset 5", pmBuildTo: "FC Stuffer" }, { id: 20, amBuildTo: "Middle Bagger", pmBuildTo: "Headset 5" },{ id: 21, amBuildTo: "Headset 6", pmBuildTo: "Middle Bagger 2" }, { id: 22, amBuildTo: "FC Expo 2", pmBuildTo: "Register 3" },{ id: 23, amBuildTo: "Register 3", pmBuildTo: "FC Stuffer" }, { id: 24, amBuildTo: "Headset 7", pmBuildTo: "Drinks 3" },{ id: 25, amBuildTo: "OS Expo 2/Drinks 3", pmBuildTo: "Headset 5" }, { id: 26, amBuildTo: "Drinks 3", pmBuildTo: "" },{ id: 27, amBuildTo: " ", pmBuildTo: "" }, { id: 28, amBuildTo: " ", pmBuildTo: "" },{ id: 29, amBuildTo: " ", pmBuildTo: "" }, { id: 30, amBuildTo: " ", pmBuildTo: "" } ],
-
-            BREAK_DURATION_MINS: 30, MIN_WORK_BEFORE_BREAK_MINS: 60, MAX_CONCURRENT_BREAKS: 2,
-
-            SHIFT_LEAD_LINEUP_IDS: { day: 12, night: 15 },
-
-            DAY_LEADER_START_TIMES_MINS: [timeToMinutes("5:00AM"), timeToMinutes("5:30AM")],
-
-            NIGHT_SHIFT_CRITICAL_END_TIME_MINS: timeToMinutes("10:30PM"),
-
-            STRINGS: { NO_BREAK_NEEDED: 'No break needed', BREAK_CONFLICT_MESSAGE: 'Break conflict: No clear slot found.', WARNING_CONCURRENT_BREAKS: 'WARNING: Break contributes to >2 concurrent.', MSG_SHIFT_LEADER_NOT_FOUND_PREFIX: 'Shift leader "', MSG_SHIFT_LEADER_NOT_FOUND_SUFFIX: '" not found in schedule. Check spelling or ensure they are scheduled.', MSG_SL_TIMES_UNPARSEABLE_PREFIX: 'Error: Could not parse schedule times for selected Shift Leader "', MSG_SL_TIMES_UNPARSEABLE_SUFFIX: '". Please check raw data format.', MSG_CHECKLIST_PERSON_NOT_FOUND_PREFIX: 'Checklist person "', MSG_CHECKLIST_PERSON_NOT_FOUND_SUFFIX: '" not found in schedule.', MSG_ASSIGNED_CHECKLIST_PERSON: 'Assigned as Checklist Person.', MSG_NO_PLAN_TO_COPY: 'No plan to copy. Please plan the shift first.', MSG_PLAN_COPIED: 'Plan copied to clipboard!', MSG_PLAN_COPIED_FALLBACK: 'Plan copied to clipboard! (using fallback)', MSG_FAILED_TO_COPY: 'Failed to copy plan. Please copy manually.', MSG_NO_PLAN_TO_PRINT: 'No plan to print. Please plan the shift first.', MSG_SHIFT_PLANNED_SUCCESS: 'Shift planned successfully!' }
-
+        // Exact 1-42 master track playlist
+        const MASTER_PLAYLIST = {
+            1: { title: "Bohemian Rhapsody", artist: "Queen" },
+            2: { title: "Don't Stop Believin", artist: "Journey" },
+            3: { title: "Dreams", artist: "Fleetwood Mac" },
+            4: { title: "Dancing Queen", artist: "ABBA" },
+            5: { title: "September", artist: "Earth, Wind & Fire" },
+            6: { title: "Sweet Caroline", artist: "Neil Diamond" },
+            7: { title: "Billie Jean", artist: "Michael Jackson" },
+            8: { title: "Take on Me", artist: "A-ha" },
+            9: { title: "Stayin Alive", artist: "Bee Gees" },
+            10: { title: "Hotel California", artist: "Eagles" },
+            11: { title: "Can't Help Falling in Love", artist: "Elvis Presley" },
+            12: { title: "Stand by Me", artist: "Ben E. King" },
+            13: { title: "Here Comes The Sun", artist: "The Beatles" },
+            14: { title: "Ain't No Mountain High Enough", artist: "Marvin Gaye & Tammi Terrell" },
+            15: { title: "Come and Get Your Love", artist: "Redbone" },
+            16: { title: "Running Up That Hill", artist: "Kate Bush" },
+            17: { title: "Jolene", artist: "Dolly Parton" },
+            18: { title: "I Will Always Love You", artist: "Whitney Houston" },
+            19: { title: "Girls Just Want To Have Fun", artist: "Cyndi Lauper" },
+            20: { title: "Eye of The Tiger", artist: "Survivor" },
+            21: { title: "Fly Me to The Moon", artist: "Frank Sinatra" },
+            22: { title: "What a Wonderful World", artist: "Louis Armstrong" },
+            23: { title: "I Want It That Way", artist: "Backstreet Boys" },
+            24: { title: "Livin' On A Prayer", artist: "Bon Jovi" },
+            25: { title: "Ring Of Fire", artist: "Johnny Cash" },
+            26: { title: "Take Me Home Country Roads", artist: "John Denver" },
+            27: { title: "Y. M. C. A.", artist: "Village People" },
+            28: { title: "All Star", artist: "Smash Mouth" },
+            29: { title: "Every Breath You Take", artist: "The Police" },
+            30: { title: "Footloose", artist: "Kenny Loggins" },
+            31: { title: "Hooked on A Feeling", artist: "Blue Swede" },
+            32: { title: "American Pie", artist: "Don McLean" },
+            33: { title: "I'm Still Standing", artist: "Elton John" },
+            34: { title: "Purple Rain", artist: "Prince" },
+            35: { title: "Sweet Child O' Mine", artist: "Guns N' Roses" },
+            36: { title: "Sweet Home Alabama", artist: "Lynyrd Skynyrd" },
+            37: { title: "Beat It", artist: "Michael Jackson" },
+            38: { title: "Smooth Criminal", artist: "Michael Jackson" },
+            39: { title: "Should I Stay or Should I Go", artist: "The Clash" },
+            40: { title: "Uptown Girl", artist: "Billy Joel" },
+            41: { title: "Free Fallin'", artist: "Tom Petty" },
+            42: { title: "Have you Ever Seen The Rain", artist: "Creedence Clearwater Revival" }
         };
-/// This is where the skills are defined for each employee. This is a work in progress and will be updated as we get more data. If there are any changes to the skills of any employee, please update this section.
 
-const EMPLOYEE_SKILLS = {
-    "Evelyn Abel": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Checklist"],
-
-    "Trevor Anderson": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Checklist"],
-
-    "Logan Armes": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Drinks", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "David Bailey": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Drinks", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Stuart Baker": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Drinks", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "David Bell": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
-
-    "Eliana Boyce": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Alexander Brown": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Amity Bullock": ["Register 1", "FC Expo", "Headset 3", "FC Drinks/Register 2", "Register 2", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Expo 2", "Headset 5", "Register 3", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Keaton Burnett": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Tyler Coapman": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Shift Leader", "Checklist"],
-
-    "Allie Crass": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist"],
-
-    "David Dallman": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist"],
-
-    "Michaela Daulton": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2","Checklist", "Shift Leader"],
-
-    "RyanG Davis": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
-
-    "Hunter Devotie": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist"],
-
-    "RyanS Davis": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Zoe Dupree": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Desserts", "FC Drinks/Desserts"],
-
-    "Ryan Ensor": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2"],
-
-    "Zachary Evans": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Timothy Faulk": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist"],
-
-    "Anna Feliciano": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist"],
-
-    "Jesse Fisher": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Shift Leader", "Checklist"],
-
-    "Christina Fulton": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Shift Leader", "Checklist"],
-
-    "Nicole George": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
-
-    "Isabella Gilliam": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist"],
-
-    "John Foote": ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Micah Glinski": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Tonalli Guerrero": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Sarah Hall": ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Isaac Hall": ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Emma Haynes": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Sara Huck": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
-
-    "Angelina Jackson Sasser": ["DT Stager/Door", "Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Tamara Johnson": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Shift Leader", "Checklist"],
-
-    "Ashley Jones": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Drinks", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Maria Juan Andres": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Tristan Kuykendall": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist"],
-
-    "Michael Lafollette": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist"],
-
-    "Cadence Lake": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
-
-    "Kayla Lewis": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist"],
-
-    "Asher Lewis": ["Dining Room", "Hospitality"],
-
-    "Grace Lingren": ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2"],
-
-"Bianca Lopez": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Drinks", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Skyla Lovell": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Drinks", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Hayden Luttrell": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Drinks", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Krystian Mateo": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
-
-    "Mariah Mireles": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist"],
-
-    "Damian Muckle": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
-
-    "Kellyn Mulrooney": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Alfonso Martinez": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Drinks", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Summer Munsey": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Kylie Musto": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Lillie Nesbitt": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2"],
-
-    "Eveline Nesbitt": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Ashlyn Owens": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist"],
-
-    "Noah Prichard": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Logan Ramirez": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Chance Ramsey": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
-
-    "Kate Redd": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist"],
-
-    "Kaitlyn Reott": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2"],
-
-    "Samantha Rhodes": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
-
-    "Daniel Sanderson": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
-
-    "Abigail Sanderson": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2"],
-
-    "Kara Schrock": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Sabrina Serrano": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
-
-    "Anne Sherwood": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Drinks", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Jaiden Sims": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "Register 1", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Kaiden Soppet": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
-
-    "Thomas Strickland": ["Headset 1", "Cash 1", "Headset 2", "DT Stuffer", "Cash 2", "Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "DT Drinks"],
-
-    "Autumn Thames": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
-
-    "Karis Thomas": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist"],
-
-    "Trey Thompson": ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Hannah Van Druff": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
-
-    "Daisy Vergara Cerecedo": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist"],
-
-    "Madison Walker": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist", "Shift Leader"],
-
-    "Jackson Weaver": ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-    
-    "Darnellius Bell" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-    
-    "Phillip Chesnutt" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-    
-    "Katelyn Lingren" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-    
-    "Keli Mitzel" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-    
-    "Connor Mullen" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-    
-    "Caleb Scarlett" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-    
-    "Zade Simonds" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-    
-    "James Toth" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-    
-    "Dominick Toth" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Neil Ballard" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Ashlee Miller" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Keely Relford" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Emily Rodenbeck" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Hanna Zopp" : ["Register 1", "FC Expo", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Dining Room", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2"],
-
-    "Cora McCullough" : ["Headset 1", "Cash 1", "Headset 2", "Cash 2", "Window", "DT Stager/Door", "DT Bagger", "DT Drinks", "Register 1", "FC Bagger", "FC Expo", "DT Stuffer", "DT Stuffer/hurricane", "FC Drinks/Desserts", "Headset 3", "FC Drinks/Register 2", "Register 2", "OS Cash", "Headset 4", "Desserts", "Dining Room", "OS Expo", "Hospitality", "Headset 4", "FC Stuffer", "FC Expo 2", "Headset 5", "Register 3", "FC Stager", "Drinks 3", "FC Expo 3", "FC Drinks 2", "Middle Bagger 1", "Middle Bagger 2", "Checklist"]
-};
-
-
-
-        // --- CORE FUNCTIONS ---
-
-        function isOverlappingRestrictedBreakTime(cSM, cEM, effectiveRestrictions) { for (const r of effectiveRestrictions) { if (cSM < r.end && cEM > r.start) return true; } return false; };
-
-        function getBuildToPositions(nA, sT) { const pS = []; const l = APP_CONFIG.LINEUP_POSITIONS_DETAILS.length; for (let i=0;i<l;i++) { const d=APP_CONFIG.LINEUP_POSITIONS_DETAILS[i]; let pN=sT==='day'?d.amBuildTo:d.pmBuildTo; if(pN)pS.push(pN); } return pS.filter(p=>p&&p.trim()!=="").slice(0,nA); };
-
-        function calculateBreak(tIM, tOM, gBC, effectiveRestrictions) { const sDH=(tOM-tIM)/60; if(sDH<6)return APP_CONFIG.STRINGS.NO_BREAK_NEEDED; let ePBS=tIM+APP_CONFIG.MIN_WORK_BEFORE_BREAK_MINS; let fS=false; let fB_S=-1,fB_E=-1; for(let cTS=ePBS;cTS+APP_CONFIG.BREAK_DURATION_MINS<=tOM;cTS+=15){ const cTE=cTS+APP_CONFIG.BREAK_DURATION_MINS; if(cTE>tOM)continue; if(isOverlappingRestrictedBreakTime(cTS,cTE, effectiveRestrictions))continue; let wEMB=false; for(let m=cTS;m<cTE;m+=15){if((gBC[m]!==undefined&&gBC[m]>=APP_CONFIG.MAX_CONCURRENT_BREAKS)){wEMB=true;break;}} if(wEMB)continue; fB_S=cTS;fB_E=cTE;fS=true;break;} if(fS){for(let m=fB_S;m<fB_E;m+=15)gBC[m]=(gBC[m]||0)+1;return `${minutesToTime(fB_S)} - ${minutesToTime(fB_E)}`;} else {return APP_CONFIG.STRINGS.BREAK_CONFLICT_MESSAGE;}};
-
-        function calculateTotalWorkHours(employees, employeeName) {
-            const employeeShifts = employees.filter(emp => emp.name === employeeName);
-            let totalMinutes = 0;
-            employeeShifts.forEach(shift => {
-                if (shift.timeInMins !== -1 && shift.timeOutMins !== -1) {
-                    totalMinutes += (shift.timeOutMins - shift.timeInMins);
-                }
-            });
-            return totalMinutes / 60;
+        // Full dataset containing the exact 75 card lists compiled
+        const cardsData = [
+            "30, 23, 42, 14, 26, 1, 17, 27, 19, 2, 36, 31, FREE, 20, 3, 38, 11, 7, 8, 28, 25, 6, 37, 21, 9",
+            "39, 23, 24, 14, 32, 29, 19, 26, 6, 22, 34, 15, FREE, 1, 9, 40, 27, 21, 31, 8, 42, 12, 41, 20, 16",
+            "30, 7, 42, 25, 40, 39, 22, 37, 41, 15, 5, 26, FREE, 12, 9, 13, 38, 33, 20, 10, 24, 36, 16, 31, 6",
+            "20, 39, 6, 27, 2, 38, 33, 25, 23, 26, 30, 14, FREE, 42, 28, 36, 35, 41, 7, 37, 31, 19, 10, 9, 24",
+            "3, 36, 30, 38, 12, 41, 18, 26, 23, 20, 4, 25, FREE, 31, 14, 21, 29, 35, 32, 7, 34, 22, 5, 39, 28",
+            "21, 26, 30, 9, 28, 29, 23, 38, 13, 12, 35, 5, FREE, 3, 22, 10, 31, 20, 27, 41, 40, 11, 25, 24, 32",
+            "31, 39, 35, 8, 26, 41, 10, 30, 32, 11, 34, 12, FREE, 16, 36, 38, 18, 37, 40, 3, 25, 42, 22, 13, 9",
+            "22, 14, 24, 29, 7, 34, 32, 38, 18, 17, 2, 8, FREE, 37, 36, 31, 26, 42, 11, 28, 33, 40, 25, 15, 27",
+            "6, 16, 3, 34, 26, 41, 38, 4, 40, 42, 27, 32, FREE, 1, 33, 20, 10, 29, 2, 19, 24, 35, 15, 13, 23",
+            "16, 11, 12, 20, 4, 25, 21, 33, 15, 10, 6, 39, FREE, 31, 42, 22, 30, 7, 9, 37, 3, 27, 19, 32, 40",
+            "18, 10, 24, 13, 28, 30, 14, 32, 12, 7, 37, 25, FREE, 6, 22, 16, 2, 5, 38, 3, 27, 17, 11, 33, 39",
+            "8, 32, 24, 21, 40, 31, 3, 17, 9, 14, 37, 18, FREE, 34, 2, 25, 6, 33, 38, 13, 26, 36, 23, 16, 20",
+            "12, 37, 22, 3, 18, 4, 7, 14, 17, 26, 25, 1, FREE, 34, 10, 9, 8, 15, 31, 2, 11, 24, 13, 39, 38",
+            "31, 8, 27, 15, 42, 18, 14, 13, 28, 7, 36, 2, FREE, 21, 32, 33, 40, 20, 3, 29, 35, 22, 34, 30, 1",
+            "26, 1, 24, 20, 15, 38, 29, 30, 39, 22, 14, 33, FREE, 25, 32, 8, 31, 9, 42, 35, 6, 27, 41, 13, 16",
+            "1, 16, 42, 23, 13, 6, 28, 34, 7, 36, 26, 40, FREE, 5, 27, 30, 20, 22, 17, 4, 32, 41, 12, 35, 24",
+            "4, 38, 20, 15, 33, 41, 25, 9, 40, 23, 6, 37, FREE, 8, 2, 42, 32, 1, 22, 35, 5, 3, 26, 13, 27",
+            "20, 34, 23, 18, 8, 21, 9, 33, 11, 13, 36, 24, FREE, 32, 40, 15, 14, 5, 31, 10, 2, 30, 29, 7, 12",
+            "2, 32, 30, 5, 14, 39, 16, 36, 22, 38, 28, 10, FREE, 42, 3, 6, 8, 41, 17, 24, 1, 29, 33, 25, 31",
+            "24, 1, 32, 18, 39, 17, 14, 35, 21, 42, 10, 20, FREE, 13, 9, 15, 26, 16, 23, 2, 7, 3, 29, 27, 37",
+            "18, 35, 3, 20, 29, 41, 23, 33, 30, 24, 25, 26, FREE, 11, 34, 19, 39, 22, 15, 27, 8, 21, 42, 40, 38",
+            "29, 2, 24, 28, 11, 12, 16, 8, 32, 26, 13, 27, FREE, 35, 18, 21, 20, 39, 42, 37, 19, 31, 10, 33, 23",
+            "13, 7, 35, 10, 3, 28, 16, 26, 21, 40, 32, 24, FREE, 41, 23, 5, 17, 39, 18, 42, 19, 30, 37, 11, 31",
+            "11, 6, 35, 36, 15, 28, 8, 42, 40, 23, 19, 14, FREE, 39, 22, 5, 26, 34, 37, 33, 4, 21, 12, 18, 16",
+            "32, 18, 35, 11, 10, 4, 28, 24, 17, 34, 27, 20, FREE, 29, 7, 22, 38, 39, 19, 25, 31, 41, 16, 1, 2",
+            "18, 22, 37, 21, 32, 20, 4, 24, 27, 41, 3, 23, FREE, 12, 31, 19, 5, 26, 11, 16, 33, 35, 34, 30, 10",
+            "12, 10, 28, 32, 19, 31, 38, 37, 16, 36, 22, 15, FREE, 11, 13, 21, 34, 20, 2, 6, 42, 17, 5, 18, 33",
+            "16, 15, 35, 21, 38, 29, 4, 37, 9, 1, 31, 10, FREE, 2, 30, 24, 32, 19, 17, 20, 8, 33, 11, 6, 39",
+            "13, 12, 14, 5, 7, 29, 33, 39, 20, 35, 16, 30, FREE, 4, 11, 38, 36, 31, 41, 8, 23, 19, 22, 9, 2",
+            "4, 18, 3, 19, 40, 30, 41, 5, 25, 28, 34, 42, FREE, 11, 6, 27, 15, 26, 7, 38, 22, 2, 16, 39, 31",
+            "32, 40, 29, 14, 6, 10, 22, 11, 30, 19, 23, 26, FREE, 35, 21, 37, 42, 39, 36, 4, 33, 17, 13, 12, 1",
+            "37, 18, 41, 38, 39, 40, 17, 34, 13, 9, 6, 22, FREE, 27, 24, 3, 26, 36, 30, 10, 7, 28, 12, 25, 8",
+            "36, 12, 8, 25, 5, 13, 7, 10, 29, 28, 42, 41, FREE, 14, 19, 23, 34, 2, 6, 37, 26, 20, 35, 30, 18",
+            "19, 42, 7, 6, 38, 40, 3, 17, 14, 12, 21, 36, FREE, 5, 25, 4, 23, 35, 33, 16, 18, 9, 2, 24, 26",
+            "17, 42, 36, 37, 29, 11, 14, 28, 19, 9, 12, 15, FREE, 2, 20, 39, 4, 22, 10, 3, 25, 21, 23, 13, 7",
+            "8, 17, 33, 30, 5, 23, 28, 29, 37, 24, 34, 31, FREE, 14, 18, 40, 26, 15, 42, 20, 22, 9, 7, 32, 11",
+            "9, 4, 17, 10, 19, 26, 15, 40, 22, 21, 42, 25, FREE, 39, 36, 20, 32, 18, 30, 7, 41, 13, 16, 1, 14",
+            "37, 24, 35, 1, 29, 17, 2, 18, 10, 41, 26, 42, FREE, 3, 13, 5, 34, 6, 9, 32, 38, 25, 7, 36, 22",
+            "38, 27, 15, 33, 5, 11, 30, 13, 36, 8, 37, 20, FREE, 23, 12, 7, 6, 42, 31, 2, 9, 17, 18, 10, 35",
+            "16, 41, 7, 20, 15, 10, 24, 19, 26, 5, 18, 2, FREE, 38, 37, 17, 36, 35, 34, 21, 1, 6, 12, 39, 31",
+            "5, 15, 18, 37, 28, 7, 42, 19, 13, 23, 29, 3, FREE, 39, 25, 36, 17, 21, 4, 8, 33, 22, 1, 27, 20",
+            "34, 15, 35, 5, 32, 14, 16, 36, 19, 7, 27, 4, FREE, 41, 10, 25, 3, 18, 9, 29, 30, 37, 17, 33, 8",
+            "14, 23, 38, 28, 24, 42, 16, 1, 3, 12, 31, 11, FREE, 4, 26, 13, 40, 39, 5, 9, 18, 33, 36, 29, 17",
+            "11, 20, 27, 13, 30, 24, 5, 35, 31, 16, 41, 39, FREE, 17, 15, 6, 32, 21, 29, 14, 22, 19, 3, 18, 36",
+            "29, 5, 14, 35, 24, 31, 1, 34, 28, 11, 10, 20, FREE, 30, 15, 38, 18, 7, 40, 9, 2, 39, 17, 3, 21",
+            "10, 27, 3, 22, 20, 39, 31, 18, 21, 6, 15, 7, FREE, 35, 36, 2, 16, 9, 23, 13, 38, 14, 5, 29, 11",
+            "41, 25, 6, 17, 5, 35, 4, 22, 2, 39, 27, 8, FREE, 11, 37, 31, 7, 26, 36, 21, 28, 29, 32, 12, 40",
+            "24, 5, 37, 39, 27, 9, 28, 4, 25, 40, 17, 10, FREE, 31, 18, 36, 38, 1, 13, 11, 41, 16, 26, 30, 29",
+            "5, 22, 36, 21, 7, 26, 17, 25, 24, 31, 4, 32, FREE, 11, 27, 15, 33, 37, 28, 38, 10, 39, 30, 23, 20",
+            "11, 22, 14, 38, 40, 2, 17, 32, 30, 41, 8, 9, FREE, 27, 29, 3, 35, 25, 13, 18, 34, 16, 4, 28, 20",
+            "15, 39, 19, 25, 6, 23, 34, 16, 3, 2, 13, 12, FREE, 20, 36, 31, 11, 30, 17, 40, 28, 8, 41, 14, 22",
+            "42, 6, 24, 8, 18, 37, 13, 27, 20, 34, 5, 9, FREE, 26, 17, 14, 30, 40, 12, 4, 7, 10, 31, 35, 25",
+            "14, 1, 5, 34, 22, 39, 41, 4, 32, 28, 30, 37, FREE, 42, 29, 38, 18, 24, 2, 6, 15, 25, 35, 8, 10",
+            "15, 42, 33, 14, 37, 12, 3, 38, 30, 35, 10, 13, FREE, 41, 16, 40, 21, 11, 27, 19, 23, 9, 1, 29, 32",
+            "27, 22, 35, 4, 33, 3, 39, 36, 24, 31, 8, 6, FREE, 9, 34, 26, 20, 7, 1, 5, 12, 32, 13, 11, 37",
+            "38, 18, 13, 39, 36, 6, 42, 23, 14, 1, 40, 30, FREE, 21, 12, 7, 33, 32, 37, 5, 20, 26, 27, 11, 28",
+            "40, 4, 26, 6, 9, 5, 15, 32, 18, 28, 21, 7, FREE, 33, 41, 11, 3, 8, 38, 16, 13, 39, 25, 2, 20",
+            "6, 13, 26, 37, 35, 8, 11, 7, 14, 21, 10, 39, FREE, 38, 4, 28, 32, 20, 23, 3, 1, 18, 16, 41, 12",
+            "4, 26, 13, 42, 2, 5, 7, 25, 38, 29, 37, 3, FREE, 41, 6, 12, 11, 15, 14, 16, 31, 10, 17, 9, 22",
+            "33, 19, 13, 31, 20, 40, 39, 32, 15, 12, 1, 8, FREE, 21, 6, 10, 41, 30, 3, 42, 34, 22, 18, 4, 29",
+            "35, 1, 31, 19, 33, 30, 41, 2, 5, 28, 13, 12, FREE, 37, 29, 15, 17, 18, 24, 8, 39, 21, 9, 23, 34",
+            "15, 1, 31, 12, 34, 19, 28, 42, 40, 18, 3, 23, FREE, 21, 22, 39, 30, 14, 10, 27, 32, 41, 37, 8, 36",
+            "2, 7, 18, 41, 30, 17, 1, 34, 32, 29, 37, 20, FREE, 28, 39, 22, 11, 35, 4, 27, 26, 40, 3, 33, 6",
+            "33, 12, 24, 39, 26, 40, 6, 32, 15, 22, 18, 11, FREE, 36, 7, 13, 35, 21, 30, 41, 14, 5, 8, 3, 9",
+            "20, 41, 30, 10, 14, 8, 36, 28, 12, 24, 33, 17, FREE, 15, 11, 34, 35, 3, 4, 26, 9, 5, 1, 32, 29",
+            "26, 6, 22, 42, 30, 3, 31, 15, 20, 10, 11, 12, FREE, 2, 34, 17, 29, 24, 13, 27, 39, 8, 36, 9, 35",
+            "7, 31, 3, 5, 37, 29, 38, 20, 25, 19, 10, 12, FREE, 8, 42, 36, 40, 21, 34, 11, 14, 41, 18, 28, 26",
+            "6, 29, 25, 37, 30, 16, 14, 41, 24, 17, 38, 20, FREE, 18, 36, 7, 2, 12, 42, 21, 28, 8, 5, 32, 15",
+            "30, 12, 20, 26, 4, 19, 39, 23, 40, 10, 17, 2, FREE, 9, 22, 34, 16, 14, 21, 18, 27, 31, 15, 7, 6",
+            "13, 17, 27, 19, 18, 5, 6, 20, 39, 16, 34, 37, FREE, 41, 22, 26, 4, 1, 10, 15, 21, 38, 40, 25, 24",
+            "37, 41, 38, 11, 12, 26, 39, 6, 21, 35, 20, 34, FREE, 24, 27, 23, 16, 36, 5, 8, 40, 28, 10, 15, 4",
+            "10, 7, 13, 18, 4, 6, 34, 14, 28, 29, 1, 27, FREE, 2, 39, 22, 20, 36, 37, 32, 12, 42, 31, 41, 8",
+            "23, 18, 30, 31, 13, 42, 2, 22, 27, 7, 26, 41, FREE, 28, 9, 35, 38, 32, 3, 40, 14, 33, 8, 4, 10",
+            "30, 33, 4, 7, 12, 5, 35, 36, 31, 15, 25, 41, FREE, 1, 18, 19, 26, 20, 39, 21, 42, 14, 16, 6, 13",
+            "20, 33, 40, 9, 2, 3, 13, 17, 4, 24, 15, 32, FREE, 10, 39, 26, 28, 6, 34, 5, 12, 7, 35, 37, 27"
+        ];
+
+        // Core App State
+        let calledSongs = []; // Array of called song IDs
+        let drawHistory = [];  // Chronological history with draw meta
+        let isAutoCalling = false;
+        let autoCallTimer = null;
+        let isTtsEnabled = true;
+        let isSynthEnabled = true;
+        let selectedInspectionCardId = null;
+
+        // Sound Engine initialization (using browser's AudioContext for synthed retro bleeps)
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
         }
 
-        function parseRawData(rD) { const ls=rD.split('\n').map(l=>l.trim()).filter(l=>l.length>0); const es=[]; let cN=''; for(const l of ls){ if(l.match(/^\(\d{3}\)\s*\d{3}-\d{4}$/)||l.includes('FOH General'))continue; else if(l.match(/^\d{1,2}:\d{2}(AM|PM)\s*-\s*\d{1,2}:\d{2}(AM|PM)$/)){ const [tIS,tOS]=l.split(' - ').map(s=>s.trim()); if(cN){ const e={name:cN,timeIn:tIS,timeOut:tOS,timeInMins:timeToMinutes(tIS),timeOutMins:timeToMinutes(tOS),breakTime:'',notes:''}; Object.values(APP_CONFIG.PEAK_HOURS).flat().forEach(p=>e[p.colHeader]='');es.push(e);}} else if(l.match(/^[A-Z][a-zA-Z\s.'-]*$/i))cN=l;} return es;};
+        function playBeep(type) {
+            if (!isSynthEnabled) return;
+            initAudio();
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
 
-        function populateEmployeeDropdowns(emps) { const slS=document.getElementById('shiftLeaderSelect');const cpS=document.getElementById('checklistPersonSelect');const curSL=slS.value;const curCP=cpS.value;slS.innerHTML='<option value="">-- Select Shift Leader (Optional) --</option>';cpS.innerHTML='<option value="">-- Select Checklist Person (Optional) --</option>';if(!emps||emps.length===0)return; const shiftTypeRadio = document.querySelector('input[name="shiftType"]:checked'); if (!shiftTypeRadio) return; const selectedShiftType = shiftTypeRadio.value;let elE=[];if(selectedShiftType==='day'){elE=emps.filter(e=>e.timeInMins!==-1&&APP_CONFIG.DAY_LEADER_START_TIMES_MINS.includes(e.timeInMins)&&EMPLOYEE_SKILLS[e.name]?.includes('Shift Leader'));}else if(selectedShiftType==='night'){elE=emps.filter(e=>e.timeOutMins===APP_CONFIG.NIGHT_SHIFT_CRITICAL_END_TIME_MINS&&EMPLOYEE_SKILLS[e.name]?.includes('Shift Leader'));}const unELN=[...new Set(elE.map(e=>e.name))].sort();unELN.forEach(n=>{slS.add(new Option(n,n));});if(unELN.includes(curSL))slS.value=curSL;if(selectedShiftType==='night'){const chkElE=emps.filter(e=>e.timeOutMins===APP_CONFIG.NIGHT_SHIFT_CRITICAL_END_TIME_MINS&&EMPLOYEE_SKILLS[e.name]?.includes('Checklist')).map(e=>e.name);[...new Set(chkElE)].sort().forEach(n=>{cpS.add(new Option(n,n));});if([...new Set(chkElE)].includes(curCP))cpS.value=curCP;}};
+                if (type === 'draw') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, audioCtx.currentTime); // A4
+                    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                } else if (type === 'bingo') {
+                    osc.type = 'sawtooth';
+                    // Win sweep chords
+                    const freqs = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                    freqs.forEach((f, idx) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.type = 'triangle';
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.frequency.setValueAtTime(f, audioCtx.currentTime + (idx * 0.1));
+                        g.gain.setValueAtTime(0.15, audioCtx.currentTime + (idx * 0.1));
+                        g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + (idx * 0.1) + 0.4);
+                        o.start(audioCtx.currentTime + (idx * 0.1));
+                        o.stop(audioCtx.currentTime + (idx * 0.1) + 0.4);
+                    });
+                } else if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.05);
+                }
+            } catch(e) {
+                console.warn("Audio Context blocked by browser permission policy", e);
+            }
+        }
 
+        // Voice Announcer TTS
+        function speakSong(songNum, songTitle) {
+            if (!isTtsEnabled) return;
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Interrupt any active speaks
+                const utterance = new SpeechSynthesisUtterance(`Song Number ${songNum}, ${songTitle}`);
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
 
+        // DOM elements cache references
+        const currentSongDisplay = document.getElementById('currentSongDisplay');
+        const currentArtistDisplay = document.getElementById('currentArtistDisplay');
+        const drawCounter = document.getElementById('drawCounter');
+        const drawProgress = document.getElementById('drawProgress');
+        const txtCompletion = document.getElementById('txtCompletion');
+        const btnDraw = document.getElementById('btnDraw');
+        const btnAutoCall = document.getElementById('btnAutoCall');
+        const autoCallIcon = document.getElementById('autoCallIcon');
+        const selTimerDuration = document.getElementById('selTimerDuration');
+        const selManualSong = document.getElementById('selManualSong');
+        const btnManualCall = document.getElementById('btnManualCall');
+        const btnClearHistory = document.getElementById('btnClearHistory');
+        const historyPlaceholder = document.getElementById('historyPlaceholder');
+        const historyList = document.getElementById('historyList');
 
-        function updateShiftTypeSpecificUI() {
+        const toggleTts = document.getElementById('toggleTts');
+        const ttsStatus = document.getElementById('ttsStatus');
+        const ttsIcon = document.getElementById('ttsIcon');
 
-            const selectedShiftTypeRadio = document.querySelector('input[name="shiftType"]:checked');
+        const toggleSynth = document.getElementById('toggleSynth');
+        const synthStatus = document.getElementById('synthStatus');
+        const synthIcon = document.getElementById('synthIcon');
 
-            if (!selectedShiftTypeRadio) { /* console.error("Shift type radio not found..."); */ return; }
+        const selCardId = document.getElementById('selCardId');
+        const rawQrInput = document.getElementById('rawQrInput');
+        const btnVerifyRaw = document.getElementById('btnVerifyRaw');
+        const cardFallbackState = document.getElementById('cardFallbackState');
+        const virtualCardContainer = document.getElementById('virtualCardContainer');
+        const txtCardViewerLabel = document.getElementById('txtCardViewerLabel');
+        const txtCardWinStatus = document.getElementById('txtCardWinStatus');
+        const verifiedBanner = document.getElementById('verifiedBanner');
+        const txtBannerDetails = document.getElementById('txtBannerDetails');
+        const selGameMode = document.getElementById('selGameMode');
 
-            const selectedShiftType = selectedShiftTypeRadio.value;
-
-            const checklistSection = document.getElementById('checklistPersonSection');
-
-            const schoolSessionSection = document.getElementById('schoolSessionSection'); 
-
-            if (checklistSection) { checklistSection.style.display = selectedShiftType === 'night' ? 'block' : 'none'; if (selectedShiftType !== 'night') { const checklistSelect = document.getElementById('checklistPersonSelect'); if (checklistSelect) checklistSelect.value = ''; } }
-
-            if (schoolSessionSection) { schoolSessionSection.style.display = selectedShiftType === 'day' ? 'block' : 'none'; }
-
-            const rawData = document.getElementById('rawDataInput').value;
-
-            const employees = rawData.trim().length > 0 ? parseRawData(rawData) : [];
-
-            populateEmployeeDropdowns(employees);
-
-        };
-
-
-        function detectConcurrentBreaksAfterAssignment(emps, gBC) { emps.forEach(e=>{if(e.breakTime&&![APP_CONFIG.STRINGS.NO_BREAK_NEEDED,APP_CONFIG.STRINGS.BREAK_CONFLICT_MESSAGE].includes(e.breakTime)){const [bsS,beS]=e.breakTime.split(' - ');const bsM=timeToMinutes(bsS);const beM=timeToMinutes(beS);if(bsM===-1||beM===-1)return;for(let m=bsM;m<beM;m+=15){if(gBC[m]>APP_CONFIG.MAX_CONCURRENT_BREAKS){e.notes=(e.notes?e.notes+'; ':'')+APP_CONFIG.STRINGS.WARNING_CONCURRENT_BREAKS;break;}}}});};
-
-        function calculateScheduledCounts(employees, shiftType) { const shiftRange = APP_CONFIG.SHIFT_TIME_RANGES[shiftType]; const scheduledCounts = {}; for (let time = shiftRange.start; time < shiftRange.end; time += 30) { let count = 0; const intervalStart = time; const intervalEnd = time + 30; employees.forEach(emp => { if (emp.timeInMins === -1 || emp.timeOutMins === -1) return; if (emp.timeInMins < intervalEnd && emp.timeOutMins > intervalStart) count++; }); scheduledCounts[minutesToTime(time)] = count; } return scheduledCounts; }
-
-        function calculateBreaksInIntervalCounts(employees, shiftType) { const shiftRange = APP_CONFIG.SHIFT_TIME_RANGES[shiftType]; const breaksInIntervalCounts = {}; for (let time = shiftRange.start; time < shiftRange.end; time += 30) { let breakCount = 0; const intervalStart = time; const intervalEnd = time + 30; const intervalTimeStr = minutesToTime(time); employees.forEach(emp => { if (emp.breakTime && emp.breakTime !== APP_CONFIG.STRINGS.NO_BREAK_NEEDED && emp.breakTime !== APP_CONFIG.STRINGS.BREAK_CONFLICT_MESSAGE) { const parts = emp.breakTime.split(/\s*-\s*/); let breakStartStr = '', breakEndStr = ''; if (parts.length === 2) { breakStartStr = parts[0].trim(); breakEndStr = parts[1].trim(); } else { return; } const breakStartMins = timeToMinutes(breakStartStr); const breakEndMins = timeToMinutes(breakEndStr); if (breakStartMins !== -1 && breakEndMins !== -1) { const overlaps = (breakStartMins < intervalEnd && breakEndMins > intervalStart); if (overlaps) breakCount++; } } }); breaksInIntervalCounts[intervalTimeStr] = breakCount; } return breaksInIntervalCounts; }
-
-        function calculateArrivalDepartureLog(employees, shiftType) { const logEntries = []; const shiftRange = APP_CONFIG.SHIFT_TIME_RANGES[shiftType]; for (let currentTimeMins = shiftRange.start; currentTimeMins <= shiftRange.end; currentTimeMins += 15) { const arrivalsAtThisTime = employees.filter(emp => emp.timeInMins === currentTimeMins).map(emp => emp.name); const departuresAtThisTime = employees.filter(emp => emp.timeOutMins === currentTimeMins).map(emp => emp.name); 
-        
-        // Filter out employees who appear in both arrivals and departures at the same time
-        const filteredArrivals = arrivalsAtThisTime.filter(name => !departuresAtThisTime.includes(name));
-        const filteredDepartures = departuresAtThisTime.filter(name => !arrivalsAtThisTime.includes(name));
-        
-        if (filteredArrivals.length > 0 || filteredDepartures.length > 0) { logEntries.push({ time: minutesToTime(currentTimeMins), arrivals: filteredArrivals, departures: filteredDepartures }); } } return logEntries; }
-
-
-
-        function renderPlan(lineupData, employees, shiftType, scheduledCounts, breaksInIntervalData, arrivalDepartureLog, dynamicLineupHeaders, closingTasks = []) {
-
-            const planOutputDiv = document.getElementById('planOutput'); planOutputDiv.innerHTML = '';   
-
-            const lineupTableContainer = document.createElement('div'); lineupTableContainer.className = 'output-table-container'; const lineupTable = document.createElement('table'); lineupTable.id = "lineupOutputTable"; lineupTable.className = 'output-table'; const lineupThead = lineupTable.createTHead(); const lineupHeaderRow = lineupThead.insertRow(); const finalTableHeaders = ['Lineup']; if (shiftType === 'day') { finalTableHeaders.push('AM Build-To'); } finalTableHeaders.push(...dynamicLineupHeaders); if (shiftType === 'night') { finalTableHeaders.push('PM Build-To'); } finalTableHeaders.forEach(headerText => { lineupHeaderRow.appendChild(document.createElement('th')).textContent = headerText; }); const lineupTbody = lineupTable.createTBody(); lineupData.forEach(entry => { const hasAssignedStaff = dynamicLineupHeaders.some(header => entry[header] && entry[header].trim() !== ''); if ((shiftType === 'day' && entry.amBuildTo) || (shiftType === 'night' && entry.pmBuildTo) || hasAssignedStaff) { const row = lineupTbody.insertRow(); row.insertCell().textContent = entry.id; if (shiftType === 'day') { row.insertCell().textContent = entry.amBuildTo; } dynamicLineupHeaders.forEach(header => { const cell = row.insertCell(); const employeeName = entry[header] || ''; cell.textContent = employeeName; if (employeeName) { cell.draggable = true; cell.classList.add('draggable-employee'); cell.dataset.employee = employeeName; cell.dataset.position = entry.id; cell.dataset.peak = header; } else { cell.classList.add('drop-zone'); } }); if (shiftType === 'night') { row.insertCell().textContent = entry.pmBuildTo; } } }); 
-
-            // Add drag and drop event listeners
-            setupDragAndDrop(lineupTable, lineupData, dynamicLineupHeaders, shiftType);
-
-            planOutputDiv.appendChild(document.createElement('h2')).textContent='Lineup'; planOutputDiv.appendChild(lineupTableContainer).appendChild(lineupTable); planOutputDiv.appendChild(document.createElement('br')); planOutputDiv.appendChild(document.createElement('br'));
-
-            // Add closing tasks section for night shift right after lineup
-            if (shiftType === 'night' && closingTasks.length > 0) {
-                const closingTasksTableContainer = document.createElement('div');
-                closingTasksTableContainer.className = 'output-table-container';
-                const closingTasksTable = document.createElement('table');
-                closingTasksTable.id = "closingTasksTable";
-                closingTasksTable.className = 'output-table';
-
-                const closingTasksThead = closingTasksTable.createTHead();
-                const closingTasksHeaderRow = closingTasksThead.insertRow();
-                closingTasksHeaderRow.appendChild(document.createElement('th')).textContent = 'Task';
-                closingTasksHeaderRow.appendChild(document.createElement('th')).textContent = 'Assigned Employee';
-
-                const closingTasksTbody = closingTasksTable.createTBody();
-                closingTasks.forEach((task, index) => {
-                    const row = closingTasksTbody.insertRow();
-                    row.insertCell().textContent = task.task;
-                    const employeeCell = row.insertCell();
-                    employeeCell.textContent = task.employee;
-                    if (task.employee && task.employee !== 'Not assigned') {
-                        employeeCell.draggable = true;
-                        employeeCell.classList.add('draggable-employee');
-                        employeeCell.dataset.employee = task.employee;
-                        employeeCell.dataset.taskIndex = index;
-                    } else {
-                        employeeCell.classList.add('drop-zone');
-                    }
-                });
-
-                // Add drag and drop event listeners for closing tasks
-                setupClosingTasksDragAndDrop(closingTasksTable, closingTasks);
-
-                planOutputDiv.appendChild(document.createElement('h2')).textContent = 'Closing Tasks (10:30 PM)';
-                planOutputDiv.appendChild(closingTasksTableContainer).appendChild(closingTasksTable);
-                planOutputDiv.appendChild(document.createElement('br'));
-                planOutputDiv.appendChild(document.createElement('br'));
+        // Set up list inputs and initial dropdown renders on app boot
+        function setupUIComponents() {
+            // Populate forced call options dropdown
+            selManualSong.innerHTML = '<option value="" disabled selected>Choose song to force call...</option>';
+            for (let id in MASTER_PLAYLIST) {
+                const song = MASTER_PLAYLIST[id];
+                const opt = document.createElement('option');
+                opt.value = id;
+                opt.text = `${id}. ${song.title} - ${song.artist}`;
+                selManualSong.appendChild(opt);
             }
 
-            const rosterTableContainer=document.createElement('div');rosterTableContainer.className='output-table-container'; const rosterTable=document.createElement('table');rosterTable.id="rosterOutputTable";rosterTable.className='output-table'; const rosterThead=rosterTable.createTHead();const rosterHeaderRow=rosterThead.insertRow(); ['Team Member','Time IN','Time OUT','Break','Notes'].forEach(hT=>{rosterHeaderRow.appendChild(document.createElement('th')).textContent=hT;}); const rosterTbody=rosterTable.createTBody(); employees.forEach(e=>{const r=rosterTbody.insertRow();r.insertCell().textContent=e.name;r.insertCell().textContent=e.timeIn;r.insertCell().textContent=e.timeOut;r.insertCell().textContent=e.breakTime;r.insertCell().textContent=e.notes;}); planOutputDiv.appendChild(document.createElement('h2')).textContent='Roster';planOutputDiv.appendChild(rosterTableContainer).appendChild(rosterTable); planOutputDiv.appendChild(document.createElement('br'));planOutputDiv.appendChild(document.createElement('br'));
+            // Populate Card ID dropdown selector
+            selCardId.innerHTML = '<option value="" disabled selected>Select player card number...</option>';
+            cardsData.forEach((_, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.text = `Card #${idx + 1}`;
+                selCardId.appendChild(opt);
+            });
 
-            const staffingTableContainer = document.createElement('div'); staffingTableContainer.className = 'output-table-container'; const staffingTable = document.createElement('table'); staffingTable.id = "staffingOutputTable"; staffingTable.className = 'output-table'; const staffingThead = staffingTable.createTHead(); const staffingHeaderRow = staffingThead.insertRow(); staffingHeaderRow.appendChild(document.createElement('th')).textContent = 'Time'; staffingHeaderRow.appendChild(document.createElement('th')).textContent = 'Total Scheduled'; staffingHeaderRow.appendChild(document.createElement('th')).textContent = 'Predicted Breaks During Interval'; const staffingTbody = staffingTable.createTBody(); if (scheduledCounts && Object.keys(scheduledCounts).length > 0) { for (const time in scheduledCounts) { if (scheduledCounts.hasOwnProperty(time)) { const row = staffingTbody.insertRow(); row.insertCell().textContent = time; row.insertCell().textContent = scheduledCounts[time]; row.insertCell().textContent = breaksInIntervalData[time] !== undefined ? breaksInIntervalData[time] : 0; } } } else { const row = staffingTbody.insertRow(); const cell = row.insertCell(); cell.colSpan = 3; cell.textContent = "No staffing data to display for this shift range."; cell.style.textAlign = "center"; } planOutputDiv.appendChild(document.createElement('h2')).textContent = `Staffing Levels Per Half Hour (${shiftType.charAt(0).toUpperCase() + shiftType.slice(1)} Shift)`; planOutputDiv.appendChild(staffingTableContainer).appendChild(staffingTable);
+            // Rebuild grid cell labels with actual titles on board hover tip anchors
+            for (let i = 1; i <= 42; i++) {
+                const song = MASTER_PLAYLIST[i];
+                const tip = document.getElementById(`masterTip-${i}`);
+                if (tip && song) {
+                    tip.innerText = song.title;
+                    tip.title = `${song.title} - ${song.artist}`;
+                }
+            }
 
-            planOutputDiv.appendChild(document.createElement('br')); planOutputDiv.appendChild(document.createElement('br'));
-
-            const adTableContainer = document.createElement('div'); adTableContainer.className = 'output-table-container'; const adTable = document.createElement('table'); adTable.id = "arrivalDepartureTable"; adTable.className = 'output-table'; const adThead = adTable.createTHead(); const adHeaderRow = adThead.insertRow(); adHeaderRow.appendChild(document.createElement('th')).textContent = 'Time'; adHeaderRow.appendChild(document.createElement('th')).textContent = 'Arrivals (+)'; adHeaderRow.appendChild(document.createElement('th')).textContent = 'Departures (-)'; const adTbody = adTable.createTBody(); if (arrivalDepartureLog && arrivalDepartureLog.length > 0) { arrivalDepartureLog.forEach(entry => { const row = adTbody.insertRow(); row.insertCell().textContent = entry.time; const arrivalsCell = row.insertCell(); const arrivalsSpan = document.createElement('span'); arrivalsSpan.className = 'arrivals-text'; arrivalsSpan.textContent = entry.arrivals.join(', '); arrivalsCell.appendChild(arrivalsSpan); const departuresCell = row.insertCell(); const departuresSpan = document.createElement('span'); departuresSpan.className = 'departures-text'; departuresSpan.textContent = entry.departures.join(', '); departuresCell.appendChild(departuresSpan); }); } else { const row = adTbody.insertRow(); const cell = row.insertCell(); cell.colSpan = 3; cell.textContent = `No arrivals or departures within the ${shiftType === 'day' ? '5AM-2PM' : '2PM-11PM'} range.`; cell.style.textAlign = "center"; } planOutputDiv.appendChild(document.createElement('h2')).textContent = `Employee Arrivals & Departures (${shiftType.charAt(0).toUpperCase() + shiftType.slice(1)} Shift)`; planOutputDiv.appendChild(adTableContainer).appendChild(adTable);
-
-        };
-
-
-
-        function showMessage(msg,type){const mb=document.getElementById('messageBox');mb.textContent=msg;mb.style.display='block';mb.style.backgroundColor=type==='success'?'#d4edda':'#f8d7da';mb.style.color=type==='success'?'#155724':'#721c24';};
-
-        function copyPlanToClipboard(){if(!document.getElementById('planOutput').innerHTML){showMessage(APP_CONFIG.STRINGS.MSG_NO_PLAN_TO_COPY,'error');return}let ttc='';const ttp=(te,t)=>{if(!te)return '';let txt=t?t+':\n':'';Array.from(te.querySelectorAll('th')).forEach((th,i,a)=>txt+=th.textContent+(i===a.length-1?'\n':'\t'));te.querySelectorAll('tbody tr').forEach(r=>{Array.from(r.querySelectorAll('td')).forEach((td,i,a)=>txt+=td.textContent+(i===a.length-1?'\n':'\t'));});return txt};ttc+=ttp(document.getElementById('lineupOutputTable'),'Lineup')+'\n';ttc+=ttp(document.getElementById('rosterOutputTable'),'Roster')+'\n';const st=document.querySelector('input[name="shiftType"]:checked').value;const staffT=document.getElementById('staffingOutputTable');if(staffT){const title=`Staffing Levels Per Half Hour (${st.charAt(0).toUpperCase()+st.slice(1)} Shift)`;ttc+=ttp(staffT,title)+'\n';}const adTable=document.getElementById('arrivalDepartureTable');if(adTable){const title=`Employee Arrivals & Departures (${st.charAt(0).toUpperCase()+st.slice(1)} Shift)`;ttc+=ttp(adTable,title)+'\n';}const closingTasksTable=document.getElementById('closingTasksTable');if(closingTasksTable){ttc+=ttp(closingTasksTable,'Closing Tasks (10:30 PM)');}const tmpC=document.getElementById('tempClipboard');tmpC.value=ttc;tmpC.select();try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(ttc).then(()=>{showMessage(APP_CONFIG.STRINGS.MSG_PLAN_COPIED,'success')}).catch(e=>{document.execCommand('copy');showMessage(APP_CONFIG.STRINGS.MSG_PLAN_COPIED_FALLBACK,'success')})}else{document.execCommand('copy');showMessage(APP_CONFIG.STRINGS.MSG_PLAN_COPIED,'success')}}catch(e){showMessage(APP_CONFIG.STRINGS.MSG_FAILED_TO_COPY,'error')}};
-
-        function downloadPlanAsPDF() {
-            const planOutput = document.getElementById('planOutput');
-            const closingTasksOutput = document.getElementById('closingTasksOutput');
+            // Bind triggers
+            btnDraw.addEventListener('click', () => drawNextSong());
+            btnAutoCall.addEventListener('click', toggleAutoCaller);
+            btnManualCall.addEventListener('click', triggerManualCall);
+            btnClearHistory.addEventListener('click', resetDashboardState);
             
-            if (!planOutput.innerHTML) {
-                showMessage(APP_CONFIG.STRINGS.MSG_NO_PLAN_TO_PRINT, 'error');
+            toggleTts.addEventListener('click', () => {
+                isTtsEnabled = !isTtsEnabled;
+                ttsStatus.innerText = isTtsEnabled ? "ON" : "OFF";
+                ttsIcon.className = isTtsEnabled ? "fa-solid fa-volume-high text-indigo-400" : "fa-solid fa-volume-mute text-slate-500";
+                playBeep('click');
+            });
+
+            toggleSynth.addEventListener('click', () => {
+                isSynthEnabled = !isSynthEnabled;
+                synthStatus.innerText = isSynthEnabled ? "ON" : "OFF";
+                synthIcon.className = isSynthEnabled ? "fa-solid fa-music text-emerald-400" : "fa-solid fa-music text-slate-500";
+                playBeep('click');
+            });
+
+            selCardId.addEventListener('change', () => {
+                selectedInspectionCardId = parseInt(selCardId.value);
+                rawQrInput.value = ""; // Clear raw text on ID select
+                loadVirtualCard(cardsData[selectedInspectionCardId], `CARD #${selectedInspectionCardId + 1}`);
+            });
+
+            btnVerifyRaw.addEventListener('click', () => {
+                const val = rawQrInput.value.trim();
+                if (!val) return;
+                selCardId.value = ""; // Clear dropdown
+                selectedInspectionCardId = null;
+                loadVirtualCard(val, "CUSTOM QR CARD");
+            });
+
+            selGameMode.addEventListener('change', () => {
+                playBeep('click');
+                evaluateWinningBingoState();
+            });
+
+            // Recover persistent cache
+            loadStateFromCache();
+        }
+
+        // Draw pool generator core logic
+        function drawNextSong() {
+            // Compile list of available items left
+            const available = [];
+            for (let i = 1; i <= 42; i++) {
+                if (!calledSongs.includes(i)) {
+                    available.push(i);
+                }
+            }
+
+            if (available.length === 0) {
+                stopAutoCaller();
+                playAlert("Deck is empty! All songs drawn.", "warning");
                 return;
             }
+
+            // Pick randomly
+            const randomIndex = Math.floor(Math.random() * available.length);
+            const chosenId = available[randomIndex];
             
-            showMessage('Generating PDF, please wait...', 'success');
-            
-            // Fix jsPDF reference for UMD build
-            const jsPDF = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
-            const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
-            const pageWidth = pdf.internal.pageSize.getWidth();
-            const pageHeight = pdf.internal.pageSize.getHeight();
-            
-            // Function to capture and add a table to PDF
-            const addTableToPDF = async (element, title, isFirstPage = false) => {
-                if (!element) return;
-                
-                // Create a temporary container for this specific element
-                const tempContainer = document.createElement('div');
-                tempContainer.style.cssText = `
-                    position: absolute;
-                    left: -9999px;
-                    top: 0;
-                    width: ${planOutput.offsetWidth}px;
-                    background: white;
-                    padding: 20px;
-                    font-family: Arial, sans-serif;
-                `;
-                
-                // Add title if provided
-                if (title) {
-                    const titleElement = document.createElement('h2');
-                    titleElement.textContent = title;
-                    titleElement.style.cssText = 'color: #333; margin-bottom: 10px;';
-                    tempContainer.appendChild(titleElement);
-                }
-                
-                // Clone the element
-                const elementClone = element.cloneNode(true);
-                tempContainer.appendChild(elementClone);
-                
-                // Append to body temporarily
-                document.body.appendChild(tempContainer);
-                
-                try {
-                    const canvas = await html2canvas(tempContainer, { 
-                        scale: 2,
-                        useCORS: true,
-                        allowTaint: true,
-                        backgroundColor: '#ffffff'
-                    });
-                    
-                    // Remove temporary container
-                    document.body.removeChild(tempContainer);
-                    
-                    const imgData = canvas.toDataURL('image/png');
-                    const imgWidth = pageWidth - 40;
-                    const imgHeight = canvas.height * imgWidth / canvas.width;
-                    
-                    // Add new page if not the first page
-                    if (!isFirstPage) {
-                        pdf.addPage();
-                    }
-                    
-                    // Add image to PDF
-                    pdf.addImage(imgData, 'PNG', 20, 20, imgWidth, imgHeight);
-                    
-                } catch (err) {
-                    // Remove temporary container if there's an error
-                    if (document.body.contains(tempContainer)) {
-                        document.body.removeChild(tempContainer);
-                    }
-                    throw err;
-                }
-            };
-            
-            // Process each table section separately
-            (async () => {
-                try {
-                    let isFirstPage = true;
-                    
-                    // 1. Lineup Table
-                    const lineupTable = document.getElementById('lineupOutputTable');
-                    if (lineupTable) {
-                        await addTableToPDF(lineupTable.closest('.output-table-container'), 'Lineup', isFirstPage);
-                        isFirstPage = false;
-                    }
-                    
-                    // 2. Closing Tasks (if night shift)
-                    const closingTasksTable = document.getElementById('closingTasksTable');
-                    if (closingTasksTable && closingTasksOutput && closingTasksOutput.style.display !== 'none') {
-                        await addTableToPDF(closingTasksTable.closest('.output-table-container'), 'Closing Tasks (10:30 PM)', isFirstPage);
-                        isFirstPage = false;
-                    }
-                    
-                    // 3. Roster Table
-                    const rosterTable = document.getElementById('rosterOutputTable');
-                    if (rosterTable) {
-                        await addTableToPDF(rosterTable.closest('.output-table-container'), 'Roster', isFirstPage);
-                        isFirstPage = false;
-                    }
-                    
-                    // 4. Staffing Table
-                    const staffingTable = document.getElementById('staffingOutputTable');
-                    if (staffingTable) {
-                        const shiftTypeRadio = document.querySelector('input[name="shiftType"]:checked');
-                        const shiftType = shiftTypeRadio ? shiftTypeRadio.value : 'day';
-                        const staffingTitle = `Staffing Levels Per Half Hour (${shiftType.charAt(0).toUpperCase() + shiftType.slice(1)} Shift)`;
-                        await addTableToPDF(staffingTable.closest('.output-table-container'), staffingTitle, isFirstPage);
-                        isFirstPage = false;
-                    }
-                    
-                    // 5. Arrival/Departure Table
-                    const arrivalDepartureTable = document.getElementById('arrivalDepartureTable');
-                    if (arrivalDepartureTable) {
-                        const shiftTypeRadio = document.querySelector('input[name="shiftType"]:checked');
-                        const shiftType = shiftTypeRadio ? shiftTypeRadio.value : 'day';
-                        const adTitle = `Employee Arrivals & Departures (${shiftType.charAt(0).toUpperCase() + shiftType.slice(1)} Shift)`;
-                        await addTableToPDF(arrivalDepartureTable.closest('.output-table-container'), adTitle, isFirstPage);
-                    }
-                    
-                    pdf.save('ShiftPlan.pdf');
-                    showMessage('PDF downloaded!', 'success');
-                    
-                } catch (err) {
-                    showMessage('Failed to generate PDF: ' + err, 'error');
-                }
-            })();
+            registerCall(chosenId);
         }
 
-        // If there is a print button, update its onclick to use the new function
-        const printButton = document.getElementById('printButton');
-        if (printButton) {
-            printButton.onclick = downloadPlanAsPDF;
+        function triggerManualCall() {
+            const val = parseInt(selManualSong.value);
+            if (isNaN(val)) return;
+
+            if (calledSongs.includes(val)) {
+                playAlert("This song has already been called!", "warning");
+                return;
+            }
+
+            registerCall(val);
+            selManualSong.value = ""; // Reset dropdown selection
         }
 
-        function handleRawDataInput(){const rd=document.getElementById('rawDataInput').value;const emps=rd.trim().length>0?parseRawData(rd):[];populateEmployeeDropdowns(emps);if(emps.length===0){document.getElementById('planOutput').innerHTML='';document.getElementById('messageBox').style.display='none';document.getElementById('debugOutput').style.display='none';}};
+        function registerCall(songId) {
+            if (calledSongs.includes(songId)) return;
 
-        function printPlan() {
-            downloadPlanAsPDF();
+            calledSongs.push(songId);
+            const song = MASTER_PLAYLIST[songId];
+            
+            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            
+            // Push history segment
+            drawHistory.unshift({
+                id: songId,
+                title: song.title,
+                artist: song.artist,
+                time: timestamp
+            });
+
+            // Update displays
+            currentSongDisplay.innerText = `${songId}. ${song.title}`;
+            currentArtistDisplay.innerText = song.artist;
+
+            // Trigger sounds and TTS loop
+            playBeep('draw');
+            speakSong(songId, song.title);
+
+            updateUIVisuals();
+            saveStateToCache();
         }
 
+        // Live feedback board redraws
+        function updateUIVisuals() {
+            // Draw counter updates
+            const totalCalled = calledSongs.length;
+            drawCounter.innerText = `${totalCalled}/42 CALLED`;
+            
+            const completionPercent = Math.round((totalCalled / 42) * 100);
+            drawProgress.style.width = `${completionPercent}%`;
+            txtCompletion.innerText = `${completionPercent}%`;
 
-        function planShift() {
+            // Style master board grid matching called array
+            for (let i = 1; i <= 42; i++) {
+                const cell = document.getElementById(`masterCell-${i}`);
+                if (cell) {
+                    if (calledSongs.includes(i)) {
+                        cell.classList.remove('bg-slate-900', 'text-slate-400', 'border-slate-800', 'hover:bg-slate-800');
+                        cell.classList.add('bg-emerald-600/20', 'text-emerald-400', 'border-emerald-500/50', 'shadow-md', 'shadow-emerald-500/5');
+                    } else {
+                        cell.classList.remove('bg-emerald-600/20', 'text-emerald-400', 'border-emerald-500/50', 'shadow-md', 'shadow-emerald-500/5');
+                        cell.classList.add('bg-slate-900', 'text-slate-400', 'border-slate-800', 'hover:bg-slate-800');
+                    }
+                }
+            }
 
+            // History log render loop
+            if (drawHistory.length > 0) {
+                historyPlaceholder.classList.add('hidden');
+                historyList.classList.remove('hidden');
+                
+                historyList.innerHTML = "";
+                drawHistory.forEach((item, index) => {
+                    const row = document.createElement('div');
+                    row.className = `flex justify-between items-center bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 hover:border-slate-700/80 px-4 py-3 rounded-xl transition-all ${index === 0 ? 'border-indigo-500/50 glow-indigo bg-indigo-950/10' : ''}`;
+                    row.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-black font-mono px-2 py-1 rounded bg-slate-800 text-indigo-400 min-w-[28px] text-center">${item.id}</span>
+                            <div class="max-w-[150px] sm:max-w-[180px] truncate">
+                                <h4 class="text-xs font-bold text-white truncate">${item.title}</h4>
+                                <p class="text-[10px] text-slate-500 truncate">${item.artist}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-mono text-slate-600">${item.time}</span>
+                            <button onclick="removeSongFromHistory(${item.id})" class="text-slate-600 hover:text-rose-400 p-1 rounded-md transition-colors text-xs" title="Remove called track">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    `;
+                    historyList.appendChild(row);
+                });
+            } else {
+                historyPlaceholder.classList.remove('hidden');
+                historyList.classList.add('hidden');
+            }
+
+            // Realtime update live check virtual card matches on any active called updates
+            evaluateWinningBingoState();
+        }
+
+        // Host board interactive manual toggles
+        function toggleSongFromBoard(songId) {
+            playBeep('click');
+            if (calledSongs.includes(songId)) {
+                removeSongFromHistory(songId);
+            } else {
+                registerCall(songId);
+            }
+        }
+
+        function removeSongFromHistory(songId) {
+            calledSongs = calledSongs.filter(id => id !== songId);
+            drawHistory = drawHistory.filter(item => item.id !== songId);
+            
+            // Fallback display if current song is deleted
+            if (calledSongs.length === 0) {
+                currentSongDisplay.innerText = "No Song Called Yet";
+                currentArtistDisplay.innerText = "Click \"Draw Song\" to kick off play";
+            } else {
+                const lastCalledId = calledSongs[calledSongs.length - 1];
+                const song = MASTER_PLAYLIST[lastCalledId];
+                currentSongDisplay.innerText = `${lastCalledId}. ${song.title}`;
+                currentArtistDisplay.innerText = song.artist;
+            }
+
+            updateUIVisuals();
+            saveStateToCache();
+        }
+
+        // Auto Caller loops
+        function toggleAutoCaller() {
+            playBeep('click');
+            if (isAutoCalling) {
+                stopAutoCaller();
+            } else {
+                startAutoCaller();
+            }
+        }
+
+        function startAutoCaller() {
+            if (calledSongs.length >= 42) {
+                playAlert("Deck is empty. Can't start timer.", "warning");
+                return;
+            }
+            isAutoCalling = true;
+            btnAutoCall.classList.remove('bg-emerald-600/20', 'text-emerald-400', 'border-emerald-500/30');
+            btnAutoCall.classList.add('bg-amber-600/20', 'text-amber-400', 'border-amber-500/30');
+            autoCallIcon.className = "fa-solid fa-pause";
+            
+            const seconds = parseInt(selTimerDuration.value) || 30;
+            autoCallTimer = setInterval(() => {
+                drawNextSong();
+            }, seconds * 1000);
+            
+            // Instantly draw one to avoid waiting for initial delay
+            drawNextSong();
+        }
+
+        function stopAutoCaller() {
+            isAutoCalling = false;
+            if (autoCallTimer) {
+                clearInterval(autoCallTimer);
+                autoCallTimer = null;
+            }
+            btnAutoCall.classList.add('bg-emerald-600/20', 'text-emerald-400', 'border-emerald-500/30');
+            btnAutoCall.classList.remove('bg-amber-600/20', 'text-amber-400', 'border-amber-500/30');
+            autoCallIcon.className = "fa-solid fa-play";
+        }
+
+        function resetDashboardState() {
+            if (confirm("Are you sure you want to reset the current game progress? All drawn history will be cleared.")) {
+                stopAutoCaller();
+                calledSongs = [];
+                drawHistory = [];
+                currentSongDisplay.innerText = "No Song Called Yet";
+                currentArtistDisplay.innerText = "Click \"Draw Song\" to kick off play";
+                updateUIVisuals();
+                saveStateToCache();
+                playBeep('draw');
+            }
+        }
+
+        // Visual Card Preview validation parser
+        let activeViewerSequence = [];
+
+        function loadVirtualCard(csvString, identifierLabel) {
+            if (!csvString) return;
+
+            // Reset visual layers
+            cardFallbackState.classList.add('hidden');
+            txtCardViewerLabel.innerText = identifierLabel;
+
+            // Split and parse
+            const cells = csvString.split(',').map(item => item.trim());
+            
+            if (cells.length !== 25) {
+                playAlert("This QR structure is invalid! Found " + cells.length + " values instead of 25.", "error");
+                return;
+            }
+
+            activeViewerSequence = cells;
+            renderVirtualCardGrid();
+            evaluateWinningBingoState();
+        }
+
+        function renderVirtualCardGrid() {
+            if (activeViewerSequence.length !== 25) return;
+
+            for (let row = 0; row < 5; row++) {
+                for (let col = 0; col < 5; col++) {
+                    const cellIndex = row * 5 + col;
+                    const val = activeViewerSequence[cellIndex];
+                    
+                    const cellEl = document.getElementById(`cell-${row}-${col}`);
+                    const numEl = document.getElementById(`cellNum-${row}-${col}`);
+                    const titleEl = document.getElementById(`cellTitle-${row}-${col}`);
+                    const dotEl = document.getElementById(`cellDot-${row}-${col}`);
+
+                    if (val === 'FREE') {
+                        numEl.innerText = "⭐";
+                        titleEl.innerText = "FREE SPACE";
+                        cellEl.className = "flex flex-col items-center justify-center rounded-lg p-0.5 border border-indigo-500/35 bg-indigo-950/20 text-center relative overflow-hidden transition-all select-none";
+                        dotEl.classList.remove('hidden');
+                    } else {
+                        const idNum = parseInt(val);
+                        numEl.innerText = idNum;
+                        
+                        const song = MASTER_PLAYLIST[idNum];
+                        titleEl.innerText = song ? song.title : "Track";
+                        titleEl.title = song ? `${song.title} - ${song.artist}` : "";
+
+                        // Evaluate hit (has host called this track number?)
+                        const isHit = calledSongs.includes(idNum);
+
+                        if (isHit) {
+                            cellEl.className = "flex flex-col items-center justify-center rounded-lg p-0.5 border border-emerald-500/40 bg-emerald-950/15 text-center relative overflow-hidden transition-all select-none scale-[0.98] glow-emerald";
+                            numEl.className = "text-[11px] sm:text-xs font-black font-mono leading-none text-emerald-400";
+                            dotEl.classList.remove('hidden');
+                        } else {
+                            cellEl.className = "flex flex-col items-center justify-center rounded-lg p-0.5 border border-slate-800/60 bg-slate-950 text-center relative overflow-hidden transition-all select-none";
+                            numEl.className = "text-[11px] sm:text-xs font-black font-mono leading-none text-slate-400";
+                            dotEl.classList.add('hidden');
+                        }
+                    }
+                }
+            }
+        }
+
+        // Core Bingo Verification Rules Engine
+        function evaluateWinningBingoState() {
+            if (activeViewerSequence.length !== 25) return;
+
+            // Re-render visual hits dynamically first
+            renderVirtualCardGrid();
+
+            const size = 5;
+            const matrix = Array.from({ length: size }, () => Array(size).fill(false));
+
+            // Load matches matrix
+            for (let row = 0; row < size; row++) {
+                for (let col = 0; col < size; col++) {
+                    const idx = row * size + col;
+                    const val = activeViewerSequence[idx];
+                    if (val === 'FREE') {
+                        matrix[row][col] = true; // Always marked
+                    } else {
+                        matrix[row][col] = calledSongs.includes(parseInt(val));
+                    }
+                }
+            }
+
+            // Fetch active target rule
+            const mode = selGameMode.value;
+            let winsCount = 0;
+            const wonLines = []; // Keep track of winning arrays
+
+            // 1. Horizontal Rows
+            for (let r = 0; r < size; r++) {
+                if (matrix[r].every(v => v)) {
+                    winsCount++;
+                    wonLines.push(`Row ${r+1}`);
+                }
+            }
+
+            // 2. Vertical Columns
+            for (let c = 0; c < size; c++) {
+                let colWin = true;
+                for (let r = 0; r < size; r++) {
+                    if (!matrix[r][c]) colWin = false;
+                }
+                if (colWin) {
+                    winsCount++;
+                    wonLines.push(`Col ${c+1}`);
+                }
+            }
+
+            // 3. Diagonals
+            let diag1 = true; // Top-Left to Bottom-Right
+            let diag2 = true; // Top-Right to Bottom-Left
+            for (let i = 0; i < size; i++) {
+                if (!matrix[i][i]) diag1 = false;
+                if (!matrix[i][size - 1 - i]) diag2 = false;
+            }
+            if (diag1) { winsCount++; wonLines.push("Diagonal ↘"); }
+            if (diag2) { winsCount++; wonLines.push("Diagonal ↙"); }
+
+            // Evaluate specific game modes match rules
+            let hasWon = false;
+            let description = "";
+
+            if (mode === "1line") {
+                hasWon = winsCount >= 1;
+                description = hasWon ? `Match found: ${wonLines[0]}` : "Awaiting single row, column, or diagonal pattern";
+            } else if (mode === "2lines") {
+                hasWon = winsCount >= 2;
+                description = hasWon ? `Matches found: ${wonLines.slice(0, 2).join(' & ')}` : "Awaiting 2 independent complete matching lines";
+            } else if (mode === "corners") {
+                // Four corners are index (0,0), (0,4), (4,0), (4,4)
+                const cornersMatched = matrix[0][0] && matrix[0][4] && matrix[4][0] && matrix[4][4];
+                hasWon = cornersMatched;
+                description = hasWon ? "All four outer grid corners crossed off!" : "Awaiting outer four corner spots to matching draw list";
+            } else if (mode === "xshape") {
+                hasWon = diag1 && diag2;
+                description = hasWon ? "Both diagonal bands matched (X Shape)!" : "Awaiting both complete diagonal paths (forming 'X')";
+            } else if (mode === "fullhouse") {
+                // Flat verification check
+                let countFilled = 0;
+                for (let r = 0; r < size; r++) {
+                    for (let c = 0; c < size; c++) {
+                        if (matrix[r][c]) countFilled++;
+                    }
+                }
+                hasWon = countFilled === 25;
+                description = hasWon ? "Complete Blackout! All 25 cells marked!" : `Accumulating blackout progress: ${countFilled}/25 matched`;
+            }
+
+            // UI feedback render
+            if (hasWon) {
+                virtualCardContainer.classList.add('bingo-glow');
+                txtCardWinStatus.innerText = "BINGO VERIFIED!";
+                txtCardWinStatus.className = "text-[10px] bg-emerald-500 text-slate-950 px-2.5 py-0.5 rounded-md font-black animate-pulse uppercase tracking-wider";
+                
+                verifiedBanner.classList.remove('hidden');
+                txtBannerDetails.innerText = description;
+                
+                // Trigger sound event once when win status activates
+                if (virtualCardContainer.dataset.lastWinState !== "true") {
+                    playBeep('bingo');
+                    virtualCardContainer.dataset.lastWinState = "true";
+                }
+            } else {
+                virtualCardContainer.classList.remove('bingo-glow');
+                txtCardWinStatus.innerText = "UNCLEARED";
+                txtCardWinStatus.className = "text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider";
+                
+                verifiedBanner.classList.add('hidden');
+                virtualCardContainer.dataset.lastWinState = "false";
+            }
+        }
+
+        // Cache utilities saving host progress local variables
+        function saveStateToCache() {
             try {
-
-                // console.clear(); 
-
-                const shiftTypeRadio = document.querySelector('input[name="shiftType"]:checked');
-
-                if (!shiftTypeRadio) {
-
-                    showMessage("Error: No shift type selected. Please select Day or Night shift.", "error");
-
-                    return; 
-
-                }
-
-                const selectedShiftType = shiftTypeRadio.value;
-
-
-                const rawData = document.getElementById('rawDataInput').value;
-
-                if (rawData.trim() === "") {
-
-                    showMessage("Please paste scheduling data.", "error");
-
-                    return;
-
-                }
-
-                let employees = parseRawData(rawData);
-
-
-
-                let actualShiftPeaks = [];
-
-                if (selectedShiftType === 'day') {
-
-                    const schoolSessionYesRadio = document.getElementById('schoolSessionYes');
-
-                    const schoolIsInSession = schoolSessionYesRadio ? schoolSessionYesRadio.checked : true; 
-
-                    if (schoolIsInSession) {
-
-                        const breakfastPeak = APP_CONFIG.PEAK_HOURS.day.find(p => p.colHeader === 'Breakfast');
-
-                        const lunchPeak = APP_CONFIG.PEAK_HOURS.day.find(p => p.colHeader === 'Lunch (12-1p)'); // Use updated colHeader
-
-                        if (breakfastPeak) actualShiftPeaks.push(breakfastPeak);
-
-                        if (lunchPeak) actualShiftPeaks.push(lunchPeak);
-
-                    } else {
-
-                        actualShiftPeaks.push(APP_CONFIG.DAY_SHIFT_MID_MORNING_PEAK_SCHOOL_OUT);
-
-                        const lunchPeak = APP_CONFIG.PEAK_HOURS.day.find(p => p.colHeader === 'Lunch (12-1p)'); // Use updated colHeader
-
-                        if (lunchPeak) actualShiftPeaks.push(lunchPeak);
-
-                    }
-
-                } else { 
-
-                    actualShiftPeaks = [...APP_CONFIG.PEAK_HOURS.night];
-
-                }
-
-                actualShiftPeaks = actualShiftPeaks.filter(p => p).sort((a, b) => a.start - b.start);
-
-
-                if (!actualShiftPeaks || actualShiftPeaks.length === 0) {
-
-                    showMessage(`Error: No relevant peak hours defined for the current selection.`, "error");
-
-                    return;
-
-                }
-
-
-                employees.sort((a, b) => a.timeInMins - b.timeInMins);
-
-
-                let effectiveBreakRestrictionHours = [...APP_CONFIG.UNIVERSAL_BREAK_RESTRICTIONS];
-
-                if (selectedShiftType === 'day') {
-
-                    const schoolSessionYesRadio = document.getElementById('schoolSessionYes');
-
-                    if (!schoolSessionYesRadio) {
-
-                         showMessage("Error: School session input element not found.", "error");
-
-                         return;
-
-                    }
-
-                    const schoolIsInSession = schoolSessionYesRadio.checked;
-
-                    if (schoolIsInSession) {
-
-                        effectiveBreakRestrictionHours.push(APP_CONFIG.DAY_SHIFT_BREAKFAST_RESTRICTIONS.schoolInSession);
-
-                    } else {
-
-                        effectiveBreakRestrictionHours.push(APP_CONFIG.DAY_SHIFT_BREAKFAST_RESTRICTIONS.schoolNotInSession);
-
-                    }
-
-                }
-
-                effectiveBreakRestrictionHours.sort((a,b) => a.start - b.start);
-
-
-                const globalBreakCounts = {}; 
-
-                for (let m = 0; m < 1440; m += 15) globalBreakCounts[m] = 0;
-
-
-
-                // Group employees by name to handle combined shifts
-                const employeeGroups = {};
-                employees.forEach(emp => {
-                    if (!employeeGroups[emp.name]) {
-                        employeeGroups[emp.name] = [];
-                    }
-                    employeeGroups[emp.name].push(emp);
-                });
-
-                // Calculate breaks based on total work hours across all shifts
-                employees.forEach(emp => {
-                    const totalHours = calculateTotalWorkHours(employees, emp.name);
-                    
-                    if (totalHours < 6) {
-                        emp.breakTime = APP_CONFIG.STRINGS.NO_BREAK_NEEDED;
-                    } else {
-                        emp.breakTime = calculateBreak(emp.timeInMins, emp.timeOutMins, globalBreakCounts, effectiveBreakRestrictionHours);
-                    }
-                });
-
-                detectConcurrentBreaksAfterAssignment(employees, globalBreakCounts); 
-
-
-
-                const lineupData = APP_CONFIG.LINEUP_POSITIONS_DETAILS.map(pos=>{const lineupEntry={id:pos.id,amBuildTo:pos.amBuildTo,pmBuildTo:pos.pmBuildTo};actualShiftPeaks.forEach(peak=>lineupEntry[peak.colHeader]='');return lineupEntry});
-
-                const slN=document.getElementById('shiftLeaderSelect').value;let allSLoSL=[];if(slN){allSLoSL=employees.filter(e=>e.name===slN);if(allSLoSL.length>0){if(allSLoSL[0].timeInMins===-1||allSLoSL[0].timeOutMins===-1){showMessage(APP_CONFIG.STRINGS.MSG_SL_TIMES_UNPARSEABLE_PREFIX+allSLoSL[0].name+APP_CONFIG.STRINGS.MSG_SL_TIMES_UNPARSEABLE_SUFFIX,'error');allSLoSL=[]}}else{showMessage(APP_CONFIG.STRINGS.MSG_SHIFT_LEADER_NOT_FOUND_PREFIX+slN+APP_CONFIG.STRINGS.MSG_SHIFT_LEADER_NOT_FOUND_SUFFIX,'error')}}const cpN=document.getElementById('checklistPersonSelect').value;let cpI=null;if(selectedShiftType==='night'&&cpN){cpI=employees.find(e=>e.name===cpN);if(!cpI){showMessage(APP_CONFIG.STRINGS.MSG_CHECKLIST_PERSON_NOT_FOUND_PREFIX+cpN+APP_CONFIG.STRINGS.MSG_CHECKLIST_PERSON_NOT_FOUND_SUFFIX,'error')}else{if(cpI)cpI.notes=(cpI.notes?cpI.notes+'; ':'')+APP_CONFIG.STRINGS.MSG_ASSIGNED_CHECKLIST_PERSON}}const slLID=APP_CONFIG.SHIFT_LEAD_LINEUP_IDS[selectedShiftType];const slLET=APP_CONFIG.LINEUP_POSITIONS_DETAILS.find(e=>e.id===slLID);
-
-
-
-                actualShiftPeaks.forEach(p=>{
-
-                    // console.log(`--- Processing Peak: ${p.colHeader} (${minutesToTime(p.start)} - ${minutesToTime(p.end)}) ---`);
-
-                    let avFP=employees.filter(e=>{const wDP=e.timeInMins<=p.start&&e.timeOutMins>=p.end;if(!wDP)return false;if(e.breakTime&&![APP_CONFIG.STRINGS.NO_BREAK_NEEDED,APP_CONFIG.STRINGS.BREAK_CONFLICT_MESSAGE].includes(e.breakTime)){const [bsS,beS]=e.breakTime.split(' - ');const bsM=timeToMinutes(bsS);const beM=timeToMinutes(beS);if(bsM===-1||beM===-1)return true;if(bsM<p.end&&beM>p.start)return false}return true});
-
-                    let eFGA=[...avFP];
-
-                    // console.log(`  1. Peak: ${p.colHeader}. Employees initially available for peak (scheduled for full peak duration & not on break): ${avFP.length}`);
-
-
-                    if(slN&&allSLoSL.length>0&&slLET){let aSLTDR=false;for(const slS of allSLoSL){if(slS.timeInMins===-1||slS.timeOutMins===-1){continue}const iSLWDP=slS.timeInMins<p.end&&slS.timeOutMins>p.start;if(iSLWDP){aSLTDR=true;break;}} if(aSLTDR){const acLE=lineupData.find(e=>e.id===slLID);if(acLE){acLE[p.colHeader]=slN;eFGA=eFGA.filter(e=>e.name!==slN); /* console.log(`  2. Peak: ${p.colHeader}. Shift Leader (${slN}) assigned. Pool for general assignment: ${eFGA.length}`); */ }}}
-
-                    // Check if shift leader is already assigned to shift lead position in a previous peak
-                    // and ensure they stay in that position for all peaks where they're available
-                    if(slN&&allSLoSL.length>0&&slLET){
-                        const acLE=lineupData.find(e=>e.id===slLID);
-                        if(acLE){
-                            // Check if shift leader was assigned to this position in any previous peak
-                            const alreadyAssignedToPrevPeak = actualShiftPeaks.some(prevPeak => {
-                                const prevPeakIndex = actualShiftPeaks.findIndex(pp => pp.colHeader === prevPeak.colHeader);
-                                const currentPeakIndex = actualShiftPeaks.findIndex(cp => cp.colHeader === p.colHeader);
-                                return prevPeakIndex < currentPeakIndex && acLE[prevPeak.colHeader] === slN;
-                            });
-
-                            // If they were assigned before and are available for this peak, keep them assigned
-                            if(alreadyAssignedToPrevPeak && !acLE[p.colHeader]){
-                                const slAvailableForThisPeak = allSLoSL.some(slS => {
-                                    if(slS.timeInMins === -1 || slS.timeOutMins === -1) return false;
-                                    return slS.timeInMins < p.end && slS.timeOutMins > p.start;
-                                });
-
-                                if(slAvailableForThisPeak){
-                                    acLE[p.colHeader] = slN;
-                                    eFGA = eFGA.filter(e => e.name !== slN);
-                                }
-                            }
-                        }
-                    }
-
-                    if(selectedShiftType==='night'&&p.colHeader==='9-10pm'&&cpI){const cpSch=cpI.timeInMins<p.end&&cpI.timeOutMins>p.start;let slIsCpAARThisPeak=false;if(slN&&slN===cpI.name){const slLE=lineupData.find(e=>e.id===slLID);if(slLE&&slLE[p.colHeader]===slN)slIsCpAARThisPeak=true}if(cpSch&&!slIsCpAARThisPeak&&eFGA.some(e=>e.name===cpI.name)){eFGA=eFGA.filter(e=>e.name!==cpI.name); /* console.log(`  3. Peak: ${p.colHeader}. Checklist Person (${cpI.name}) removed. Pool for general assignment: ${eFGA.length}`); */}}
-
-
-
-                    // console.log(`  4. Peak: ${p.colHeader}. Employees available for general assignment: ${eFGA.length}`);
-
-                    let assignedInLoopCount = 0;
-
-                    const tempGeneralPool = [...eFGA]; 
-
-
-                    for(let i=tempGeneralPool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[tempGeneralPool[i],tempGeneralPool[j]]=[tempGeneralPool[j],tempGeneralPool[i]]}
-
-
-for(const det of APP_CONFIG.LINEUP_POSITIONS_DETAILS) {
-    if (tempGeneralPool.length === 0) break;
-
-    const cPN = selectedShiftType === 'day' ? det.amBuildTo : det.pmBuildTo;
-    const lE = lineupData.find(e => e.id === det.id);
-
-    if (lE && cPN && cPN.trim() !== '') {
-        if (lE[p.colHeader] === '') {
-            const skilledMatchIndex = tempGeneralPool.findIndex(emp => 
-                EMPLOYEE_SKILLS[emp.name]?.includes(cPN)
-            );
-            if (skilledMatchIndex !== -1) {
-                const skilledEmployee = tempGeneralPool.splice(skilledMatchIndex, 1)[0];
-                lE[p.colHeader] = skilledEmployee.name;
-                assignedInLoopCount++;
-            }
-        }
-    }
-}
-
-
-                    // console.log(`  5. Peak: ${p.colHeader}. Assigned ${assignedInLoopCount} employees in general loop.`);
-
-                    // if (tempGeneralPool.length > 0) {
-
-                    //    console.warn(`  WARNING: ${tempGeneralPool.length} employees left over after general assignment for peak ${p.colHeader}:`, tempGeneralPool.map(e=>e.name));
-
-                    // }
-
-                });
-
-
-
-                const scheduledCounts = calculateScheduledCounts(employees,selectedShiftType);
-
-                const breaksInIntervalData = calculateBreaksInIntervalCounts(employees,selectedShiftType);
-
-                const arrivalDepartureLogData = calculateArrivalDepartureLog(employees, selectedShiftType);
-
-                const dynamicPeakColumnHeaders = actualShiftPeaks.map(p => p.colHeader);
-
-
-                // Assign closing tasks for night shift
-                let closingTasks = [];
-                if (selectedShiftType === 'night') {
-                    const closingTasksList = ['Floors Lead', 'Floors 1', 'Floors 2', 'Bathroom', 'Polishing', 'Icedream'];
-
-                    // Get employees who get off at 10:30 PM
-                    const employeesOffAt1030 = employees.filter(emp => emp.timeOutMins === timeToMinutes("10:30PM"));
-
-                    // Exclude employees already assigned to Shift Leader or Checklist
-                    const availableForClosing = employeesOffAt1030.filter(emp => {
-                        // Check if employee is assigned as shift leader
-                        const isShiftLeader = emp.name === slN;
-
-                        // Check if employee is assigned as checklist person
-                        const isChecklistPerson = emp.name === cpN;
-
-                        return !isShiftLeader && !isChecklistPerson;
-                    });
-
-                    // Randomly assign closing tasks
-                    const shuffledEmployees = [...availableForClosing];
-                    for (let i = shuffledEmployees.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [shuffledEmployees[i], shuffledEmployees[j]] = [shuffledEmployees[j], shuffledEmployees[i]];
-                    }
-
-                    closingTasksList.forEach((task, index) => {
-                        const assignedEmployee = shuffledEmployees[index % shuffledEmployees.length];
-                        closingTasks.push({
-                            task: task,
-                            employee: assignedEmployee ? assignedEmployee.name : 'Not assigned'
-                        });
-                    });
-
-                    // Add Parking Lot task for employees leaving at 9:00 PM
-                    const employeesOffAt9 = employees.filter(emp => emp.timeOutMins === timeToMinutes("9:00PM"));
-                    
-                    // Exclude employees already assigned to other roles
-                    const availableForParkingLot = employeesOffAt9.filter(emp => {
-                        const isShiftLeader = emp.name === slN;
-                        const isChecklistPerson = emp.name === cpN;
-                        return !isShiftLeader && !isChecklistPerson;
-                    });
-
-                    // Assign parking lot task
-                    if (availableForParkingLot.length > 0) {
-                        const randomIndex = Math.floor(Math.random() * availableForParkingLot.length);
-                        const parkingLotEmployee = availableForParkingLot[randomIndex];
-                        
-                        closingTasks.push({
-                            task: 'Parking Lot',
-                            employee: parkingLotEmployee.name
-                        });
-                    } else {
-                        closingTasks.push({
-                            task: 'Parking Lot',
-                            employee: 'Not assigned'
-                        });
-                    }
-                }
-
-                renderPlan(lineupData,employees,selectedShiftType,scheduledCounts,breaksInIntervalData, arrivalDepartureLogData, dynamicPeakColumnHeaders, closingTasks);
-
-
-
-                document.getElementById('copyButton').style.display='flex';document.getElementById('printButton').style.display='flex';showMessage(APP_CONFIG.STRINGS.MSG_SHIFT_PLANNED_SUCCESS,'success')
-
-            } catch (error) {
-
-                console.error("Error during planShift execution:", error);
-
-                showMessage(`An error occurred: ${error.message}. Please check console (F12) if possible, or report the error.`, "error");
-
-            }
-
-        };
-
-
-        // Dark mode functionality
-        function initializeTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeToggleIcon(savedTheme);
-        }
-
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeToggleIcon(newTheme);
-        }
-
-        function updateThemeToggleIcon(theme) {
-            const themeToggle = document.getElementById('themeToggle');
-            if (themeToggle) {
-                themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
-                themeToggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+                const state = {
+                    calledSongs: calledSongs,
+                    drawHistory: drawHistory,
+                    selectedCard: selCardId.value,
+                    rawText: rawQrInput.value,
+                    gameMode: selGameMode.value
+                };
+                localStorage.setItem('music_bingo_dashboard_cache', JSON.stringify(state));
+            } catch (e) {
+                console.error("Local storage error saving state.", e);
             }
         }
 
-        function setupDragAndDrop(table, lineupData, dynamicLineupHeaders, shiftType) {
-            let draggedElement = null;
-            let draggedData = null;
+        function loadStateFromCache() {
+            try {
+                const cached = localStorage.getItem('music_bingo_dashboard_cache');
+                if (!cached) return;
 
-            // Add drag start event to draggable employees
-            table.addEventListener('dragstart', function(e) {
-                if (e.target.classList.contains('draggable-employee')) {
-                    draggedElement = e.target;
-                    draggedData = {
-                        employee: e.target.dataset.employee || '',
-                        position: parseInt(e.target.dataset.position) || 0,
-                        peak: e.target.dataset.peak || ''
-                    };
-                    e.target.classList.add('dragging');
-                    if (e.dataTransfer) {
-                        e.dataTransfer.effectAllowed = 'move';
-                        e.dataTransfer.setData('text/plain', ''); // Required for some browsers
-                    }
-                }
-            });
+                const state = JSON.parse(cached);
+                if (state.calledSongs) calledSongs = state.calledSongs;
+                if (state.drawHistory) drawHistory = state.drawHistory;
+                if (state.gameMode) selGameMode.value = state.gameMode;
 
-            // Add drag end event
-            table.addEventListener('dragend', function(e) {
-                if (e.target.classList.contains('draggable-employee')) {
-                    e.target.classList.remove('dragging');
-                }
-                // Clean up drag-over classes
-                table.querySelectorAll('.drag-over').forEach(c => c.classList.remove('drag-over'));
-            });
-
-            // Add drag over event to allow dropping
-            table.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                if (e.dataTransfer) {
-                    e.dataTransfer.dropEffect = 'move';
+                // Sync UI displays
+                if (calledSongs.length > 0) {
+                    const lastCalledId = calledSongs[calledSongs.length - 1];
+                    const song = MASTER_PLAYLIST[lastCalledId];
+                    currentSongDisplay.innerText = `${lastCalledId}. ${song.title}`;
+                    currentArtistDisplay.innerText = song.artist;
                 }
 
-                const cell = e.target.closest('td');
-                if (cell && (cell.classList.contains('drop-zone') || cell.classList.contains('draggable-employee'))) {
-                    // Remove drag-over class from all cells
-                    table.querySelectorAll('.drag-over').forEach(c => c.classList.remove('drag-over'));
-                    
-                    // Only add drag-over to cells that can accept drops
-                    const row = cell.closest('tr');
-                    if (row && row.parentNode.tagName === 'TBODY') {
-                        cell.classList.add('drag-over');
-                    }
-                }
-            });
-
-            // Add drag leave event
-            table.addEventListener('dragleave', function(e) {
-                const cell = e.target.closest('td');
-                if (cell && !cell.contains(e.relatedTarget)) {
-                    cell.classList.remove('drag-over');
-                }
-            });
-
-            // Add drop event
-            table.addEventListener('drop', function(e) {
-                e.preventDefault();
-                const targetCell = e.target.closest('td');
-
-                if (targetCell && draggedElement && draggedData) {
-                    // Remove drag-over class
-                    table.querySelectorAll('.drag-over').forEach(c => c.classList.remove('drag-over'));
-
-                    // Get target position and peak info
-                    const targetRow = targetCell.closest('tr');
-                    const targetRowIndex = Array.from(targetRow.parentNode.children).indexOf(targetRow);
-                    const targetCellIndex = Array.from(targetRow.children).indexOf(targetCell);
-
-                    // Calculate which peak column this is
-                    let peakIndex = targetCellIndex - 1; // Subtract 1 for lineup ID column
-                    if (shiftType === 'day') {
-                        peakIndex -= 1; // Subtract 1 more for AM Build-To column
-                    }
-
-                    // Ensure we're dropping in a valid peak column
-                    if (peakIndex >= 0 && peakIndex < dynamicLineupHeaders.length) {
-                        const targetPeak = dynamicLineupHeaders[peakIndex];
-                        const targetLineupEntry = lineupData[targetRowIndex];
-                        const targetPositionId = targetLineupEntry.id;
-
-                        // Find source entry
-                        const sourceEntry = lineupData.find(entry => entry.id === draggedData.position);
-
-                        if (sourceEntry && targetLineupEntry && sourceEntry !== targetLineupEntry) {
-                            // Store current values
-                            const sourceEmployee = draggedData.employee;
-                            const targetEmployee = targetLineupEntry[targetPeak] || '';
-
-                            // Update the data model
-                            sourceEntry[draggedData.peak] = targetEmployee;
-                            targetLineupEntry[targetPeak] = sourceEmployee;
-
-                            // Update the source cell display
-                            if (targetEmployee) {
-                                draggedElement.textContent = targetEmployee;
-                                draggedElement.dataset.employee = targetEmployee;
-                                draggedElement.classList.add('draggable-employee');
-                                draggedElement.classList.remove('drop-zone');
-                                draggedElement.draggable = true;
-                            } else {
-                                draggedElement.textContent = '';
-                                draggedElement.removeAttribute('data-employee');
-                                draggedElement.classList.remove('draggable-employee');
-                                draggedElement.classList.add('drop-zone');
-                                draggedElement.draggable = false;
-                            }
-
-                            // Update the target cell display
-                            targetCell.textContent = sourceEmployee;
-                            targetCell.dataset.employee = sourceEmployee;
-                            targetCell.dataset.position = targetPositionId;
-                            targetCell.dataset.peak = targetPeak;
-                            targetCell.classList.add('draggable-employee');
-                            targetCell.classList.remove('drop-zone');
-                            targetCell.draggable = true;
-                        } else if (sourceEntry && targetLineupEntry && sourceEntry === targetLineupEntry) {
-                            // Same row, different peak - move within the same position
-                            const sourceEmployee = draggedData.employee;
-                            const targetEmployee = targetLineupEntry[targetPeak] || '';
-
-                            // Update the data model
-                            sourceEntry[draggedData.peak] = targetEmployee;
-                            targetLineupEntry[targetPeak] = sourceEmployee;
-
-                            // Update the source cell display
-                            if (targetEmployee) {
-                                draggedElement.textContent = targetEmployee;
-                                draggedElement.dataset.employee = targetEmployee;
-                                draggedElement.dataset.peak = draggedData.peak;
-                                draggedElement.classList.add('draggable-employee');
-                                draggedElement.classList.remove('drop-zone');
-                                draggedElement.draggable = true;
-                            } else {
-                                draggedElement.textContent = '';
-                                draggedElement.removeAttribute('data-employee');
-                                draggedElement.classList.remove('draggable-employee');
-                                draggedElement.classList.add('drop-zone');
-                                draggedElement.draggable = false;
-                            }
-
-                            // Update the target cell display
-                            targetCell.textContent = sourceEmployee;
-                            targetCell.dataset.employee = sourceEmployee;
-                            targetCell.dataset.position = targetPositionId;
-                            targetCell.dataset.peak = targetPeak;
-                            targetCell.classList.add('draggable-employee');
-                            targetCell.classList.remove('drop-zone');
-                            targetCell.draggable = true;
-                        }
-                    }
+                // Sync live checker
+                if (state.selectedCard) {
+                    selCardId.value = state.selectedCard;
+                    selectedInspectionCardId = parseInt(state.selectedCard);
+                    loadVirtualCard(cardsData[selectedInspectionCardId], `CARD #${selectedInspectionCardId + 1}`);
+                } else if (state.rawText) {
+                    rawQrInput.value = state.rawText;
+                    loadVirtualCard(state.rawText, "CUSTOM QR CARD");
                 }
 
-                // Reset drag state
-                draggedElement = null;
-                draggedData = null;
-            });
+                updateUIVisuals();
+            } catch (e) {
+                console.error("Error parsing restore cached parameters.", e);
+            }
         }
 
-        function setupClosingTasksDragAndDrop(table, closingTasks) {
-            let draggedElement = null;
-            let draggedData = null;
+        // Clean micro alerts helper toasts instead of standard block interrupts
+        function playAlert(msg, type) {
+            // Flash a toast on host screen beautifully
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-5 right-5 z-50 glass-panel border px-5 py-3 rounded-2xl flex items-center gap-3 shadow-2xl transition-all duration-300 transform translate-y-10 opacity-0 ${
+                type === 'error' ? 'border-rose-500 text-rose-300 bg-rose-950/20' : 'border-amber-500 text-amber-300 bg-amber-950/20'
+            }`;
+            toast.innerHTML = `
+                <i class="fa-solid ${type === 'error' ? 'fa-circle-exclamation' : 'fa-triangle-exclamation'}"></i>
+                <span class="text-xs font-semibold">${msg}</span>
+            `;
+            document.body.appendChild(toast);
+            
+            // Animate In
+            setTimeout(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+            }, 50);
 
-            // Add drag start event to draggable employees
-            table.addEventListener('dragstart', function(e) {
-                if (e.target.classList.contains('draggable-employee')) {
-                    draggedElement = e.target;
-                    draggedData = {
-                        employee: e.target.dataset.employee,
-                        taskIndex: parseInt(e.target.dataset.taskIndex)
-                    };
-                    e.target.classList.add('dragging');
-                    if (e.dataTransfer) {
-                        e.dataTransfer.effectAllowed = 'move';
-                        e.dataTransfer.setData('text/plain', ''); // Required for some browsers
-                    }
-                }
-            });
-
-            // Add drag end event
-            table.addEventListener('dragend', function(e) {
-                if (e.target.classList.contains('draggable-employee')) {
-                    e.target.classList.remove('dragging');
-                }
-                // Clean up drag-over classes
-                table.querySelectorAll('.drag-over').forEach(c => c.classList.remove('drag-over'));
-            });
-
-            // Add drag over event to allow dropping
-            table.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                if (e.dataTransfer) {
-                    e.dataTransfer.dropEffect = 'move';
-                }
-
-                const cell = e.target.closest('td');
-                if (cell && cell.cellIndex === 1 && (cell.classList.contains('drop-zone') || cell.classList.contains('draggable-employee'))) {
-                    // Remove drag-over class from all cells
-                    table.querySelectorAll('.drag-over').forEach(c => c.classList.remove('drag-over'));
-                    cell.classList.add('drag-over');
-                }
-            });
-
-            // Add drag leave event
-            table.addEventListener('dragleave', function(e) {
-                const cell = e.target.closest('td');
-                if (cell && !cell.contains(e.relatedTarget)) {
-                    cell.classList.remove('drag-over');
-                }
-            });
-
-            // Add drop event
-            table.addEventListener('drop', function(e) {
-                e.preventDefault();
-                const targetCell = e.target.closest('td');
-
-                if (targetCell && targetCell.cellIndex === 1 && draggedElement && draggedData) {
-                    // Remove drag-over class
-                    table.querySelectorAll('.drag-over').forEach(c => c.classList.remove('drag-over'));
-
-                    // Get target task index
-                    const targetRow = targetCell.closest('tr');
-                    const targetRowIndex = Array.from(targetRow.parentNode.children).indexOf(targetRow);
-
-                    // Update the data
-                    const sourceTaskIndex = draggedData.taskIndex;
-                    const targetTaskIndex = targetRowIndex;
-
-                    if (sourceTaskIndex !== targetTaskIndex && sourceTaskIndex >= 0 && targetTaskIndex >= 0) {
-                        // Store current values
-                        const sourceEmployee = draggedData.employee;
-                        const targetEmployee = closingTasks[targetTaskIndex].employee;
-
-                        // Swap the employees in the closing tasks data
-                        closingTasks[targetTaskIndex].employee = sourceEmployee;
-                        closingTasks[sourceTaskIndex].employee = targetEmployee;
-
-                        // Update the source cell display
-                        if (targetEmployee && targetEmployee !== 'Not assigned') {
-                            draggedElement.textContent = targetEmployee;
-                            draggedElement.dataset.employee = targetEmployee;
-                            draggedElement.classList.add('draggable-employee');
-                            draggedElement.classList.remove('drop-zone');
-                            draggedElement.draggable = true;
-                        } else {
-                            draggedElement.textContent = 'Not assigned';
-                            draggedElement.removeAttribute('data-employee');
-                            draggedElement.classList.remove('draggable-employee');
-                            draggedElement.classList.add('drop-zone');
-                            draggedElement.draggable = false;
-                        }
-
-                        // Update the target cell display
-                        targetCell.textContent = sourceEmployee;
-                        targetCell.dataset.employee = sourceEmployee;
-                        targetCell.dataset.taskIndex = targetTaskIndex;
-                        
-                        if (sourceEmployee && sourceEmployee !== 'Not assigned') {
-                            targetCell.classList.add('draggable-employee');
-                            targetCell.classList.remove('drop-zone');
-                            targetCell.draggable = true;
-                        } else {
-                            targetCell.classList.remove('draggable-employee');
-                            targetCell.classList.add('drop-zone');
-                            targetCell.draggable = false;
-                        }
-                    }
-                }
-
-                // Reset drag state
-                draggedElement = null;
-                draggedData = null;
-            });
+            // Out
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
         }
 
-        document.addEventListener('DOMContentLoaded',()=>{
-
-            initializeTheme();
-
-            updateShiftTypeSpecificUI();
-
-            document.querySelectorAll('.button-group button').forEach(b=>{if(!b.hasAttribute('type'))b.setAttribute('type','button')});
-
-            const dO=document.getElementById('debugOutput');if(dO)dO.style.display='none';
-
-            // Theme toggle event listener
-            const themeToggle = document.getElementById('themeToggle');
-            if (themeToggle) {
-                themeToggle.addEventListener('click', toggleTheme);
-            }
-
-            const disclaimerPopup = document.getElementById('disclaimerPopup');
-
-            const closeDisclaimerBtn = document.getElementById('closeDisclaimerBtn');
-
-            if (disclaimerPopup && closeDisclaimerBtn) {
-
-                disclaimerPopup.style.display = 'block'; 
-
-                closeDisclaimerBtn.addEventListener('click', () => {
-
-                    disclaimerPopup.style.display = 'none';
-
-                });
-
-            }
-
+        // Initialize App on Window Loaded
+        window.addEventListener('load', () => {
+            setupUIComponents();
         });
-
     </script>
-    <!-- Add jsPDF library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
-
 </html>
